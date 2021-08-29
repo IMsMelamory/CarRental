@@ -67,6 +67,17 @@ namespace CarRental
 
            
         }
+        public List<Cars> GetCars()
+        {
+            var settings = new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Objects,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            };
+            var myCars = JsonConvert.DeserializeObject<List<Cars>>(File.ReadAllText(@"C:\rentcar\cars.json"), settings)
+                            ?? new List<Cars>();
+            return myCars;
+        }
 
     }
 }

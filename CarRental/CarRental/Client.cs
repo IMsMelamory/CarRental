@@ -12,7 +12,7 @@ namespace CarRental
         public string NumberDriversLicence { get; set; }
         Manager Manager { get; set; }
 
-        public void AddClient(string lastName, string name, string secondLastName, string bDay, string numberDriverLicense, Manager manager)
+        public void AddClient(string lastName, string name, string secondLastName, DateTime bDay, string numberDriverLicense, Manager manager)
         {
             var settings = new JsonSerializerSettings
             {
@@ -36,7 +36,7 @@ namespace CarRental
                             ?? new List<Client>();
             var client = new Client()
             {
-                LastName = lastName, Name = name, SecondLastName = secondLastName, BDay = DateTime.Parse(bDay), NumberDriversLicence = numberDriverLicense
+                LastName = lastName, Name = name, SecondLastName = secondLastName, BDay = bDay, NumberDriversLicence = numberDriverLicense
             };
             manager.AssociateManager(client);
             myClients.Add(client);
