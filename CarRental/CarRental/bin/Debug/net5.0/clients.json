@@ -1,0 +1,20 @@
+[
+  {
+    "$id": "1",
+    "$type": "CarRental.Client, CarRental",
+    "NumberDriversLicence": "12345",
+    "Name": "111",
+    "LastName": "111",
+    "SecondLastName": "111",
+    "BDay": "2000-01-01T00:00:00"
+  },
+  {
+    "$id": "2",
+    "$type": "CarRental.Client, CarRental",
+    "NumberDriversLicence": "12345",
+    "Name": "222",
+    "LastName": "222",
+    "SecondLastName": "222",
+    "BDay": "2002-02-02T00:00:00"
+  }
+]

@@ -12,5 +12,6 @@ namespace CarRental
         public int CarId { get; set; }
         public DateTime StartRent { get; set; }
         public DateTime EndRent { get; set; }
+        public int Fine { get; set; }
     }
 }
