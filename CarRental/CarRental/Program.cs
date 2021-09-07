@@ -1,12 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using static CarRental.Repozitory.ClientRepository;
-using static CarRental.Repozitory.CarRepository;
-using static CarRental.Repozitory.ManagerRepository;
-
+using CarRental.Providers;
+using CarRental.Repositories;
 
 namespace CarRental
 {
@@ -14,6 +8,10 @@ namespace CarRental
     {
         static void Main(string[] args)
         {
+            var carRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
+            var clientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
+            var managersRepository = new Repository<Manager>(new JsonProvider<Manager>("managers.json"));
+
             while (true)
             {
                 Console.WriteLine("Введите: 1 - вход админа, 2 - вход менеджера, exit - выход");
@@ -122,120 +120,152 @@ namespace CarRental
                                     var Availability = Console.ReadLine();
                                     Console.WriteLine("Введите стоимость аренды в день");
                                     var DayPrice = Console.ReadLine();
-                                    AddCar(NumberCar, ModelCar, ColorCar, DataRelease, Availability, int.Parse(DayPrice));
+
+                                    var carToAdd = new Car
+                                    {
+                                        Number = NumberCar,
+                                        Model = ModelCar,
+                                        Color = ColorCar,
+                                        DateRelease = DataRelease,
+                                        Availability = bool.TryParse(Availability, out var availability) && availability,
+                                        DayPrice = 
+                                    };
+                                    carRepository.Add(carToAdd);
                                     break;
                                 case "4":
                                     Console.WriteLine("Введите номер машины");
                                     NumberCar = Console.ReadLine();
-                                    var car = new Car();
-                                    RemoveCar(NumberCar);
+                                    
+                                    carRepository.RemoveByCarNumber(NumberCar);
                                     break;
                                 case "5":
                                     Console.WriteLine("Поиск по: 1- Фамилия; 2 - Имя; 3 - Отчество; 4 - Водительское удостоверение");
                                     var RezFindClient = Console.ReadLine();
                                     var parseResultFindClient = int.TryParse(RezFindClient, out var rezfindclient);
-                                    if (rezfindclient == 1)
+                                    switch (rezfindclient)
                                     {
-                                        Console.WriteLine("Введите фамилию клиента");
-                                        var find = Console.ReadLine();
-                                        var FindClientRez = GetClients().FindAll(client => client.LastName == find).ToList();
-                                        foreach (Client client in FindClientRez)
+                                        case 1:
                                         {
-                                            Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
+                                            Console.WriteLine("Введите фамилию клиента");
+                                            var find = Console.ReadLine();
+                                        
+                                            foreach (var client in clientsRepository.FindByLastName(find))
+                                            {
+                                                Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else if (rezfindclient == 2)
-                                    {
-                                        Console.WriteLine("Введите имя клиента");
-                                        var find = Console.ReadLine();
-                                        var FindClientRez = GetClients().FindAll(client => client.Name == find).ToList();
-                                        foreach (Client client in FindClientRez)
+                                        case 2:
                                         {
-                                            Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
+                                            Console.WriteLine("Введите имя клиента");
+                                            var find = Console.ReadLine();
+                                        
+                                            foreach (Client client in clientsRepository.FindByName(find))
+                                            {
+                                                Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else if (rezfindclient == 3)
-                                    {
-                                        Console.WriteLine("Введите отчество клиента");
-                                        var find = Console.ReadLine();
-                                        var FindClientRez = GetClients().FindAll(client => client.SecondLastName == find).ToList();
-                                        foreach (Client client in FindClientRez)
+                                        case 3:
                                         {
-                                            Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
+                                            Console.WriteLine("Введите отчество клиента");
+                                            var find = Console.ReadLine();
+                                            var FindClientRez = GetClients().FindAll(client => client.SecondLastName == find).ToList();
+                                            foreach (Client client in FindClientRez)
+                                            {
+                                                Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else if (rezfindclient == 4)
-                                    {
-                                        Console.WriteLine("Введите номер водительского удостоверения клиента");
-                                        var find = Console.ReadLine();
-                                        var FindClientRez = GetClients().FindAll(client => client.NumberDriversLicence == find).ToList();
-                                        foreach (Client client in FindClientRez)
+                                        case 4:
                                         {
-                                            Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
+                                            Console.WriteLine("Введите номер водительского удостоверения клиента");
+                                            var find = Console.ReadLine();
+                                            var FindClientRez = GetClients().FindAll(client => client.NumberDriversLicence == find).ToList();
+                                            foreach (Client client in FindClientRez)
+                                            {
+                                                Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Такого клиента не существует!!!");
+                                        default:
+                                            Console.WriteLine("Такого клиента не существует!!!");
+                                            break;
                                     }
                                     break;
                                 case "6":
                                     Console.WriteLine("Поиск по: 1- Номер машины; 2 - Марка машины; 3 - Цвет машины; 4 - Годвыпуска; 5 - Наличие: true\false;");
                                     var RezFindCar = Console.ReadLine();
                                     var parseResultFindCar = int.TryParse(RezFindCar, out var rezfindcar);
-                                    if (rezfindcar == 1)
+                                    switch (rezfindcar)
                                     {
-                                        Console.WriteLine("Введите номер машины");
-                                        var find = Console.ReadLine();
-                                        var FindCar = GetCars().FindAll(car => car.Number == find).ToList();
-                                        foreach (var cars in FindCar)
+                                        case 1:
                                         {
-                                            Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            Console.WriteLine("Введите номер машины");
+                                            var find = Console.ReadLine();
+                                            var FindCar = GetCars().FindAll(car => car.Number == find).ToList();
+                                            foreach (var cars in FindCar)
+                                            {
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else if (rezfindcar == 2)
-                                    {
-                                        Console.WriteLine("Введите марку машины");
-                                        var find = Console.ReadLine();
-                                        var FindCar = GetCars().FindAll(car => car.Model == find).ToList();
-                                        foreach (var cars in FindCar)
+                                        case 2:
                                         {
-                                            Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            Console.WriteLine("Введите марку машины");
+                                            var find = Console.ReadLine();
+                                            var FindCar = GetCars().FindAll(car => car.Model == find).ToList();
+                                            foreach (var cars in FindCar)
+                                            {
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else if (rezfindcar == 3)
-                                    {
-                                        Console.WriteLine("Введите цвет машины");
-                                        var find = Console.ReadLine();
-                                        var FindCar = GetCars().FindAll(car => car.Color == find).ToList();
-                                        foreach (var cars in FindCar)
+                                        case 3:
                                         {
-                                            Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            Console.WriteLine("Введите цвет машины");
+                                            var find = Console.ReadLine();
+                                            var FindCar = GetCars().FindAll(car => car.Color == find).ToList();
+                                            foreach (var cars in FindCar)
+                                            {
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else if (rezfindcar == 4)
-                                    {
-                                        Console.WriteLine("Введите год выпуска машины");
-                                        var find = Console.ReadLine();
-                                        var FindCar = GetCars().FindAll(car => car.DateRelease == find).ToList();
-                                        foreach (var cars in FindCar)
+                                        case 4:
                                         {
-                                            Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            Console.WriteLine("Введите год выпуска машины");
+                                            var find = Console.ReadLine();
+                                            var FindCar = GetCars().FindAll(car => car.DateRelease == find).ToList();
+                                            foreach (var cars in FindCar)
+                                            {
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else if (rezfindcar == 5)
-                                    {
-                                        Console.WriteLine("Введите true или false ");
-                                        var find = Console.ReadLine();
-                                        var FindCar = GetCars().FindAll(car => car.Availability == bool.Parse(find)).ToList();
-                                        foreach (var cars in FindCar)
+                                        case 5:
                                         {
-                                            Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            Console.WriteLine("Введите true или false ");
+                                            var find = Console.ReadLine();
+                                            var FindCar = GetCars().FindAll(car => car.Availability == bool.Parse(find)).ToList();
+                                            foreach (var cars in FindCar)
+                                            {
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                            }
+
+                                            break;
                                         }
-                                    }
-                                    else
-                                    {
-                                        Console.WriteLine("Такой машины не существует!!!");
+                                        default:
+                                            Console.WriteLine("Такой машины не существует!!!");
+                                            break;
                                     }
 
                                     break;

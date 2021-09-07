@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using CarRental.Entities;
+using CarRental.Repositories;
 
 namespace CarRental
 {
-    public class Car
+    public class Car : BaseEntity
     {
         public string Number { get; set; }
         public string Model { get; set; }
