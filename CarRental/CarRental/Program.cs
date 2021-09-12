@@ -10,33 +10,33 @@ namespace CarRental
         {
             var carRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
             var clientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
-            var managersRepository = new Repository<Manager>(new JsonProvider<Manager>("managers.json"));
+            var managersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
 
             while (true)
             {
                 Console.WriteLine("Введите: 1 - вход админа, 2 - вход менеджера, exit - выход");
-                var InputBegin = Console.ReadLine();
-                if (InputBegin == "1")
+                var inputBegin = Console.ReadLine();
+                if (inputBegin == "1")
                 {
                     while (true)
                     {
                         Console.WriteLine("Введите: 1 - добавить менеджера, 2 - удалить менеджера, exit - выход");
-                        var InputManager = Console.ReadLine();
-                        if (InputManager == "1")
+                        var inputManager = Console.ReadLine();
+                        if (inputManager == "1")
                         {
                             Console.WriteLine("Введите фамилию");
-                            var LastName = Console.ReadLine();
+                            var lastName = Console.ReadLine();
                             Console.WriteLine("Введите Имя");
-                            var Name = Console.ReadLine();
+                            var name = Console.ReadLine();
                             Console.WriteLine("Введите Отчество");
-                            var SecondLastName = Console.ReadLine();
-                            DateTime Day;
-                            var BDay = "";
+                            var secondLastName = Console.ReadLine();
+                            DateTime day;
+                            var bDay = "";
                             while (true)
                             {
                                 Console.WriteLine("Введите полную дату рождения");
-                                BDay = Console.ReadLine();
-                                if (DateTime.TryParse(BDay, out Day) == false)
+                                bDay = Console.ReadLine();
+                                if (DateTime.TryParse(bDay, out day) == false)
                                 {
                                     Console.WriteLine("Ошибка! ВВедите полную дату рождения");
                                 }
@@ -45,15 +45,22 @@ namespace CarRental
                                     break;
                                 }
                             }
-                            AddManager(LastName, Name, SecondLastName, Day);
+                            var managerToAdd = new Manager
+                            {
+                                LastName = lastName,
+                                Name = name,
+                                SecondLastName = secondLastName,
+                                BDay = day,
+                            };
+                            managersRepository.Add(managerToAdd);
                         }
-                        else if (InputManager == "2")
+                        else if (inputManager == "2")
                         {
                             Console.WriteLine("Введите фамилию");
-                            var LastName = Console.ReadLine();
-                            RemoveManager(LastName);
+                            var lastName = Console.ReadLine();
+                            managersRepository.RemoveByLastNameManager(lastName); 
                         }
-                        else if (InputManager.ToLower() == "exit")
+                        else if (inputManager.ToLower() == "exit")
                         {
                             break;
                         }
@@ -63,13 +70,13 @@ namespace CarRental
                         }
                     }
                 }
-                else if (InputBegin == "2")
+                else if (inputBegin == "2")
                 {
                     Console.WriteLine("Введите фамилию менеджера");
                     var inputManager = Console.ReadLine();
-                    if (FindManager(inputManager) != null)
+                    if (managersRepository.FindByLastName(inputManager) != null)
                     {
-                        var thisManager = FindManager(inputManager);
+                        var thisManager = managersRepository.FindByLastName(inputManager);
                         while (true)
                         {
                             Console.WriteLine("Введите: 1 - добавить клиента; 2 - удалить клиента; 3 - добавить машину; 4 - удалить машину; 5 - поиск клиента; 6 - поиск машины; exit - выход");
@@ -78,18 +85,18 @@ namespace CarRental
                             { 
                                 case "1":
                                     Console.WriteLine("Введите фамилию");
-                                    var LastName = Console.ReadLine();
+                                    var lastName = Console.ReadLine();
                                     Console.WriteLine("Введите Имя");
-                                    var Name = Console.ReadLine();
+                                    var name = Console.ReadLine();
                                     Console.WriteLine("Введите Отчество");
-                                    var SecondLastName = Console.ReadLine();
-                                    var BDay = "";
-                                    DateTime Day;
+                                    var secondLastName = Console.ReadLine();
+                                    var bDay = "";
+                                    DateTime day;
                                     while (true)
                                     {
                                         Console.WriteLine("Введите полную дату рождения");
-                                        BDay = Console.ReadLine();
-                                        if (DateTime.TryParse(BDay, out Day) == false)
+                                        bDay = Console.ReadLine();
+                                        if (DateTime.TryParse(bDay, out day) == false)
                                         {
                                             Console.WriteLine("Ошибка! ВВедите полную дату рождения");
                                         }
@@ -99,49 +106,80 @@ namespace CarRental
                                         }
                                     }
                                     Console.WriteLine("Введите номер удостоверения");
-                                    var NumberDriverLicense = Console.ReadLine();
-                                    AddClient(LastName, Name, SecondLastName, Day, NumberDriverLicense, thisManager);
+                                    var numberDriverLicense = Console.ReadLine();
+                                    var clientToAdd = new Client()
+                                    {
+                                        LastName = lastName,
+                                        Name = name,
+                                        SecondLastName = secondLastName,
+                                        BDay = day,
+                                        NumberDriversLicence = numberDriverLicense,
+                                    };
+                                    clientsRepository.Add(clientToAdd);
+                                    //clientToAdd.ClientAssociateManager((Manager)thisManager);
                                     break;
                                 case "2":
                                     Console.WriteLine("Введите номер удостоверения");
-                                    NumberDriverLicense = Console.ReadLine();
-                                    RemoveClient(NumberDriverLicense);
+                                    numberDriverLicense = Console.ReadLine();
+                                    clientsRepository.RemoveByNumberDriversLicense(numberDriverLicense);
                                     break;
                                 case "3":
                                     Console.WriteLine("Введите номер машины");
-                                    var NumberCar = Console.ReadLine();
+                                    var numberCar = Console.ReadLine();
                                     Console.WriteLine("Введите модель машины");
-                                    var ModelCar = Console.ReadLine();
+                                    var modelCar = Console.ReadLine();
                                     Console.WriteLine("Введите цвет машины");
-                                    var ColorCar = Console.ReadLine();
+                                    var colorCar = Console.ReadLine();
                                     Console.WriteLine("Введите год выпуска");
-                                    var DataRelease = Console.ReadLine();
-                                    Console.WriteLine("Введите доступна ли машина: true\false");
-                                    var Availability = Console.ReadLine();
-                                    Console.WriteLine("Введите стоимость аренды в день");
-                                    var DayPrice = Console.ReadLine();
-
+                                    var dataRelease = Console.ReadLine();
+                                    var availabilityBool = false;
+                                    while (true)
+                                    {
+                                        Console.WriteLine("Введите доступна ли машина: true\false");
+                                        var availability = Console.ReadLine();
+                                        if (bool.TryParse(availability, out availabilityBool) == false)
+                                        {
+                                            Console.WriteLine("Ошибка! ВВедите true или false");
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    var dayPriceInt = 0;
+                                    while (true)
+                                    {
+                                        Console.WriteLine("Введите стоимость аренды в день");
+                                        var dayPrice = Console.ReadLine();
+                                        if (int.TryParse(dayPrice, out dayPriceInt) == false)
+                                        {
+                                            Console.WriteLine("Ошибка! ВВедите целочисленную стоимость");
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
                                     var carToAdd = new Car
                                     {
-                                        Number = NumberCar,
-                                        Model = ModelCar,
-                                        Color = ColorCar,
-                                        DateRelease = DataRelease,
-                                        Availability = bool.TryParse(Availability, out var availability) && availability,
-                                        DayPrice = 
+                                        Number = numberCar,
+                                        Model = modelCar,
+                                        Color = colorCar,
+                                        DateRelease = dataRelease,
+                                        Availability = availabilityBool,
+                                        DayPrice = dayPriceInt,
                                     };
                                     carRepository.Add(carToAdd);
                                     break;
                                 case "4":
                                     Console.WriteLine("Введите номер машины");
-                                    NumberCar = Console.ReadLine();
-                                    
-                                    carRepository.RemoveByCarNumber(NumberCar);
+                                    numberCar = Console.ReadLine();
+                                    carRepository.RemoveByCarNumber(numberCar);
                                     break;
                                 case "5":
                                     Console.WriteLine("Поиск по: 1- Фамилия; 2 - Имя; 3 - Отчество; 4 - Водительское удостоверение");
-                                    var RezFindClient = Console.ReadLine();
-                                    var parseResultFindClient = int.TryParse(RezFindClient, out var rezfindclient);
+                                    var rezFindClient = Console.ReadLine();
+                                    var parseResultFindClient = int.TryParse(rezFindClient, out var rezfindclient);
                                     switch (rezfindclient)
                                     {
                                         case 1:
@@ -172,20 +210,17 @@ namespace CarRental
                                         {
                                             Console.WriteLine("Введите отчество клиента");
                                             var find = Console.ReadLine();
-                                            var FindClientRez = GetClients().FindAll(client => client.SecondLastName == find).ToList();
-                                            foreach (Client client in FindClientRez)
+                                            foreach (var client in clientsRepository.FindBySecondLastName(find))
                                             {
                                                 Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
                                             }
-
                                             break;
                                         }
                                         case 4:
                                         {
                                             Console.WriteLine("Введите номер водительского удостоверения клиента");
                                             var find = Console.ReadLine();
-                                            var FindClientRez = GetClients().FindAll(client => client.NumberDriversLicence == find).ToList();
-                                            foreach (Client client in FindClientRez)
+                                            foreach (var client in clientsRepository.FindByNumberDriverLicense(find))
                                             {
                                                 Console.WriteLine(client.LastName + " " + client.Name + " " + client.SecondLastName + " " + client.BDay + " " + client.NumberDriversLicence);
                                             }
@@ -199,28 +234,25 @@ namespace CarRental
                                     break;
                                 case "6":
                                     Console.WriteLine("Поиск по: 1- Номер машины; 2 - Марка машины; 3 - Цвет машины; 4 - Годвыпуска; 5 - Наличие: true\false;");
-                                    var RezFindCar = Console.ReadLine();
-                                    var parseResultFindCar = int.TryParse(RezFindCar, out var rezfindcar);
+                                    var rezFindCar = Console.ReadLine();
+                                    var parseResultFindCar = int.TryParse(rezFindCar, out var rezfindcar);
                                     switch (rezfindcar)
                                     {
                                         case 1:
                                         {
                                             Console.WriteLine("Введите номер машины");
                                             var find = Console.ReadLine();
-                                            var FindCar = GetCars().FindAll(car => car.Number == find).ToList();
-                                            foreach (var cars in FindCar)
+                                            foreach (var cars in carRepository.FindByNumberCar(find))
                                             {
                                                 Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
                                             }
-
                                             break;
                                         }
                                         case 2:
                                         {
                                             Console.WriteLine("Введите марку машины");
                                             var find = Console.ReadLine();
-                                            var FindCar = GetCars().FindAll(car => car.Model == find).ToList();
-                                            foreach (var cars in FindCar)
+                                            foreach (var cars in carRepository.FindByModelCar(find))
                                             {
                                                 Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
                                             }
@@ -231,8 +263,7 @@ namespace CarRental
                                         {
                                             Console.WriteLine("Введите цвет машины");
                                             var find = Console.ReadLine();
-                                            var FindCar = GetCars().FindAll(car => car.Color == find).ToList();
-                                            foreach (var cars in FindCar)
+                                            foreach (var cars in carRepository.FindByColorCar(find))
                                             {
                                                 Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
                                             }
@@ -243,8 +274,7 @@ namespace CarRental
                                         {
                                             Console.WriteLine("Введите год выпуска машины");
                                             var find = Console.ReadLine();
-                                            var FindCar = GetCars().FindAll(car => car.DateRelease == find).ToList();
-                                            foreach (var cars in FindCar)
+                                            foreach (var cars in carRepository.FindByDateRelease(find))
                                             {
                                                 Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
                                             }
@@ -255,9 +285,8 @@ namespace CarRental
                                         {
                                             Console.WriteLine("Введите true или false ");
                                             var find = Console.ReadLine();
-                                            var FindCar = GetCars().FindAll(car => car.Availability == bool.Parse(find)).ToList();
-                                            foreach (var cars in FindCar)
-                                            {
+                                            foreach (var cars in carRepository.FindByAviability(bool.TryParse(find, out var findBool) && findBool))
+                                                {
                                                 Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
                                             }
 
@@ -286,7 +315,7 @@ namespace CarRental
                         Console.WriteLine("Такого менеджера не существует!!!");
                     }
                 }
-                else if (InputBegin.ToLower() == "exit")
+                else if (inputBegin.ToLower() == "exit")
                 {
                     break;
                 }
