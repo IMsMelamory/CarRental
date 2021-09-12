@@ -267,7 +267,6 @@ namespace CarRental
                                             Console.WriteLine("Такой машины не существует!!!");
                                             break;
                                     }
-
                                     break;
                                 case "exit":
                                     break;
