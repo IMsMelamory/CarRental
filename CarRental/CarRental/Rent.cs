@@ -10,10 +10,11 @@ namespace CarRental
 {
    public  class Rent : BaseEntity
     {
-        public int ClientID { get; set; }
-        public int CarId { get; set; }
+        public string ClientNumberLicense { get; set; }
+        public string CarNumber { get; set; }
         public DateTime StartRent { get; set; }
         public DateTime EndRent { get; set; }
+        public int DayRentCount { get; set; }
         public int Fine { get; set; }
     }
 }

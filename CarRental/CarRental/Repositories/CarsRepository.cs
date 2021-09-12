@@ -99,4 +99,10 @@ namespace CarRental.Repositories
             return _entities.Where(x => x.Availability == aviability).ToList();
         }
     }
-}
+    public class RentRepository : Repository<Rent>
+    {
+        public RentRepository(BaseDataProvider<Rent> jsonProvider) : base(jsonProvider)
+        {
+        }
+    }
+    }

@@ -11,6 +11,7 @@ namespace CarRental
             var carRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
             var clientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
             var managersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
+            var rentRepository = new RentRepository(new JsonProvider<Rent>("rent.json"));
 
             while (true)
             {
@@ -79,7 +80,7 @@ namespace CarRental
                         var thisManager = managersRepository.FindByLastName(inputManager);
                         while (true)
                         {
-                            Console.WriteLine("Введите: 1 - добавить клиента; 2 - удалить клиента; 3 - добавить машину; 4 - удалить машину; 5 - поиск клиента; 6 - поиск машины; exit - выход");
+                            Console.WriteLine("Введите: 1 - добавить клиента; 2 - удалить клиента; 3 - добавить машину; 4 - удалить машину; 5 - поиск клиента; 6 - поиск машины; 7 - оформить аренду; 8 - вернуть арендованную машину; exit - выход");
                             var inputString = Console.ReadLine();
                             switch (inputString)
                             { 
@@ -286,7 +287,7 @@ namespace CarRental
                                             Console.WriteLine("Введите true или false ");
                                             var find = Console.ReadLine();
                                             foreach (var cars in carRepository.FindByAviability(bool.TryParse(find, out var findBool) && findBool))
-                                                {
+                                            {
                                                 Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
                                             }
 
@@ -297,6 +298,76 @@ namespace CarRental
                                             break;
                                     }
                                     break;
+                                case "7":
+                                    Console.WriteLine("Введите номер удостоверения");
+                                    var clientDriverLicense = Console.ReadLine();
+                                    if (clientsRepository.FindByNumberDriverLicense(clientDriverLicense).Count == 0)
+                                    {
+                                        Console.WriteLine("Ошибка! Клиента  с таким номером не существует");
+                                        break;
+                                    } 
+                                    Console.WriteLine("Введите номер машины");
+                                    var carnumber = Console.ReadLine();
+                                    if (carRepository.FindByNumberCar(carnumber).Count == 0)
+                                    {
+                                        Console.WriteLine("Ошибка! Машины  с таким номером не существует");
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        var count = 0;
+                                        foreach (var car in carRepository.FindByNumberCar(carnumber))
+                                        {
+                                            if (car.Availability == false)
+                                            {
+                                                Console.WriteLine("Ошибка! Машина  уже в аренде!");
+                                                count++;
+                                            }
+                                        }
+                                        if (count != 0)
+                                        {
+                                            break;
+                                        }
+                                        
+                                    }
+                                    var rentDate = "";
+                                    DateTime startRentDate;
+                                    while (true)
+                                    {
+                                        Console.WriteLine("Введите дату начала аренды");
+                                        rentDate = Console.ReadLine();
+                                        if (DateTime.TryParse(rentDate, out startRentDate) == false)
+                                        {
+                                            Console.WriteLine("Ошибка! ВВедите полную дату дату начала аренды");
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    var dayRentCountInt = 0;
+                                    while (true)
+                                    {
+                                        Console.WriteLine("Введите количество дней аренды");
+                                        var dayRentCount = Console.ReadLine();
+                                        if (int.TryParse(dayRentCount, out dayRentCountInt) == false)
+                                        {
+                                            Console.WriteLine("Ошибка! ВВедите целочисленное ");
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    var rentToAdd = new Rent()
+                                    {
+                                        ClientNumberLicense = clientDriverLicense,
+                                        CarNumber = carnumber,
+                                        StartRent = startRentDate,
+                                        DayRentCount = dayRentCountInt,
+                                    };
+                                    rentRepository.Add(rentToAdd);
+                                    break;   
                                 case "exit":
                                     break;
                                 default:
