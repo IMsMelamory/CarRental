@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System;
 using CarRental.Providers;
 
 namespace CarRental.Repositories
@@ -98,11 +99,66 @@ namespace CarRental.Repositories
             UpdateDataIfNotExist();
             return _entities.Where(x => x.Availability == aviability).ToList();
         }
+        public void UpdateAviability(string numbercar, bool aviability)
+        {
+            UpdateDataIfNotExist();
+            foreach (var findcar in this.FindByNumberCar(numbercar))
+            {
+                findcar.Availability = aviability;
+            }
+           ForceUpdate();
+        }
     }
     public class RentRepository : Repository<Rent>
     {
         public RentRepository(BaseDataProvider<Rent> jsonProvider) : base(jsonProvider)
         {
+        }
+        public List<Rent> FindRentCar(string clientdriverlicense, string carnumber)
+        {
+            UpdateDataIfNotExist();
+            return _entities.Where(x => (x.ClientNumberLicense == clientdriverlicense) && (x.CarNumber == carnumber)).ToList();
+        }
+        public bool ChekDateEndRent(string clientdriverlicense, string carnumber, DateTime endrent)
+        {
+            UpdateDataIfNotExist();
+            var count = 0;
+            foreach (var rentcar in this.FindRentCar(clientdriverlicense, carnumber))
+            {
+                if (rentcar.StartRent > endrent)
+                {
+                    count++;
+                }
+            }
+            if (count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void UpdateDateEnd(string clientdriverlicense, string carnumber, DateTime endrent)
+        {
+            UpdateDataIfNotExist();
+            foreach (var findcar in this.FindRentCar(clientdriverlicense,carnumber))
+            {
+                findcar.EndRent = endrent;
+            }
+            ForceUpdate();
+        }
+        public void ChekIsFine(string clientdriverlicense, string carnumber)
+        {
+            UpdateDataIfNotExist();
+            foreach (var findcar in this.FindRentCar(clientdriverlicense, carnumber))
+            {
+                if ((findcar.EndRent - findcar.StartRent).TotalDays > findcar.DayRentCount)
+                {
+                   findcar.Fine = (findcar.DayRentCount - ((findcar.EndRent - findcar.StartRent).TotalDays)) * 5;
+                }
+            }
+            ForceUpdate();
         }
     }
     }

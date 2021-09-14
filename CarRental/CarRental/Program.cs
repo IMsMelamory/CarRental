@@ -122,7 +122,15 @@ namespace CarRental
                                 case "2":
                                     Console.WriteLine("Введите номер удостоверения");
                                     numberDriverLicense = Console.ReadLine();
-                                    clientsRepository.RemoveByNumberDriversLicense(numberDriverLicense);
+                                    if (clientsRepository.FindByNumberDriverLicense(numberDriverLicense).Count != 0)
+                                    {
+                                        clientsRepository.RemoveByNumberDriversLicense(numberDriverLicense);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Такого клиента не существует!");
+                                    }
+                                    
                                     break;
                                 case "3":
                                     Console.WriteLine("Введите номер машины");
@@ -175,7 +183,14 @@ namespace CarRental
                                 case "4":
                                     Console.WriteLine("Введите номер машины");
                                     numberCar = Console.ReadLine();
-                                    carRepository.RemoveByCarNumber(numberCar);
+                                    if (carRepository.FindByNumberCar(numberCar).Count != 0)
+                                    {
+                                        carRepository.RemoveByCarNumber(numberCar);
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Такой мащины не существует!");
+                                    }
                                     break;
                                 case "5":
                                     Console.WriteLine("Поиск по: 1- Фамилия; 2 - Имя; 3 - Отчество; 4 - Водительское удостоверение");
@@ -320,7 +335,6 @@ namespace CarRental
                                         {
                                             if (car.Availability == false)
                                             {
-                                                Console.WriteLine("Ошибка! Машина  уже в аренде!");
                                                 count++;
                                             }
                                         }
@@ -367,9 +381,59 @@ namespace CarRental
                                         DayRentCount = dayRentCountInt,
                                     };
                                     rentRepository.Add(rentToAdd);
-                                    break;   
-                                case "exit":
+                                    carRepository.UpdateAviability(carnumber, false);
                                     break;
+                                case "8":
+                                    Console.WriteLine("Введите номер удостоверения");
+                                    clientDriverLicense = Console.ReadLine();
+                                    Console.WriteLine("Введите номер машины");
+                                    carnumber = Console.ReadLine();
+                                    if (rentRepository.FindRentCar(clientDriverLicense, carnumber).Count == 0)
+                                    {
+                                        Console.WriteLine("Ошибка! Введенной арендованной машины нет");
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        foreach (var car in carRepository.FindByNumberCar(carnumber))
+                                        {
+                                            if (car.Availability == true)
+                                            {
+                                                Console.WriteLine("Ошибка! Машина уже возвращена!");
+                                                break;
+                                            }
+                                        }
+
+                                    }
+                                    rentDate = "";
+                                    DateTime endRentDate;
+                                    while (true)
+                                    {
+                                        Console.WriteLine("Введите дату окончания аренды");
+                                        rentDate = Console.ReadLine();
+                                        if (DateTime.TryParse(rentDate, out endRentDate) == false)
+                                        {
+                                            Console.WriteLine("Ошибка! ВВедите полную дату окончания аренды");
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                    if (rentRepository.ChekDateEndRent(clientDriverLicense, carnumber, endRentDate) == false)
+                                    {
+                                        Console.WriteLine("Ошибка! Дата окончания аренды раньше начала! Введите корректную дату");
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        rentRepository.UpdateDateEnd(clientDriverLicense, carnumber, endRentDate);
+                                        rentRepository.ChekIsFine(clientDriverLicense, carnumber);
+                                        carRepository.UpdateAviability(carnumber, true);
+                                    }
+                                    break;
+                                case "exit":
+                                    break;    
                                 default:
                                     Console.WriteLine("Что-то ничего не могу сделать...Ввведите корректное число!!!");
                                     break;
