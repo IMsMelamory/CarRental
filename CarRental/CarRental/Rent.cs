@@ -1,6 +1,5 @@
 ﻿using System;
 using CarRental.Entities;
-using CarRental.Repositories;
 
 namespace CarRental
 {

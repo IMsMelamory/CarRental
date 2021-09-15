@@ -1,6 +1,7 @@
 ﻿using System;
 using CarRental.Providers;
 using CarRental.Repositories;
+using CarRental.Services;
 
 namespace CarRental
 {
@@ -9,8 +10,11 @@ namespace CarRental
         static void Main(string[] args)
         {
             var carRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
+            
             var clientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
             var managersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
+            var clientAssociatedService = new ClientAssociatedService(clientsRepository, managersRepository);
+
             var rentRepository = new RentRepository(new JsonProvider<Rent>("rent.json"));
 
             while (true)
