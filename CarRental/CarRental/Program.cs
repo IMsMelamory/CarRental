@@ -11,7 +11,7 @@ namespace CarRental
             var carRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
             var clientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
             var managersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
-            var rentRepository = new RentRepository(new JsonProvider<Rent>("rent.json"));
+            var rentRepository = new RentsRepository(new JsonProvider<Rent>("rent.json"));
 
             while (true)
             {
@@ -52,6 +52,7 @@ namespace CarRental
                                 Name = name,
                                 SecondLastName = secondLastName,
                                 BDay = day,
+                                ID = managersRepository.FindMaxIDManagers()+1,
                             };
                             managersRepository.Add(managerToAdd);
                         }
@@ -115,6 +116,7 @@ namespace CarRental
                                         SecondLastName = secondLastName,
                                         BDay = day,
                                         NumberDriversLicence = numberDriverLicense,
+                                        ID = clientsRepository.FindMaxIDClient() + 1,
                                     };
                                     clientsRepository.Add(clientToAdd);
                                     //clientToAdd.ClientAssociateManager((Manager)thisManager);
@@ -177,6 +179,7 @@ namespace CarRental
                                         DateRelease = dataRelease,
                                         Availability = availabilityBool,
                                         DayPrice = dayPriceInt,
+                                        ID = carRepository.FindMaxIDCar() + 1,
                                     };
                                     carRepository.Add(carToAdd);
                                     break;
@@ -379,6 +382,7 @@ namespace CarRental
                                         CarNumber = carnumber,
                                         StartRent = startRentDate,
                                         DayRentCount = dayRentCountInt,
+                                        ID = rentRepository.FindMaxIDRent()+1,
                                     };
                                     rentRepository.Add(rentToAdd);
                                     carRepository.UpdateAviability(carnumber, false);
