@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.ComponentModel.Design;
 using CarRental.Providers;
 
 namespace CarRental.Repositories
@@ -10,44 +11,47 @@ namespace CarRental.Repositories
         public RentsRepository(BaseDataProvider<Rent> jsonProvider) : base(jsonProvider)
         {
         }
-        public List<Rent> FindRentCar(string clientDriverLicense, string carNumber)
+        public int FindMaxIDRent()
         {
             UpdateDataIfNotExist();
-            return _entities.Where(x => (x.ClientNumberLicense == clientDriverLicense) && (x.CarNumber == carNumber)).ToList();
+            var id = _entities.Select(x => x.ID);
+            if (id.Any())
+            {
+                return id.Max();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public Rent FindRentCar(string clientDriverLicense, string carNumber)
+        {
+            UpdateDataIfNotExist();
+            return _entities.FirstOrDefault(x => (x.ClientNumberLicense == clientDriverLicense) && (x.CarNumber == carNumber) && (x.EndRent == DateTime.MinValue));
         }
         public bool ChekDateEndRent(string clientDriverLicense, string carNumber, DateTime endRent)
         {
             UpdateDataIfNotExist();
-            var count = 0;
-            foreach (var rentcar in this.FindRentCar(clientDriverLicense, carNumber))
+            if (this.FindRentCar(clientDriverLicense, carNumber).StartRent > endRent)
             {
-                if (rentcar.StartRent > endRent)
-                {
-                    count++;
-                }
-            }
-            if (count == 0)
-            {
-                return true;
+                return false;
             }
             else
             {
-                return false;
+                return true;
             }
         }
         public void UpdateDateEnd(string clientDriverLicense, string carNumber, DateTime endRent)
         {
             UpdateDataIfNotExist();
-            foreach (var findCar in this.FindRentCar(clientDriverLicense, carNumber))
-            {
-                findCar.EndRent = endRent;
-            }
+            this.FindRentCar(clientDriverLicense, carNumber).EndRent = endRent;
             ForceUpdate();
         }
         public void ChekIsFine(string clientDriverLicense, string carNumber)
         {
             UpdateDataIfNotExist();
-            foreach (var findCar in this.FindRentCar(clientDriverLicense, carNumber))
+            var findCar = this.FindRentCar(clientDriverLicense, carNumber);
             {
                 if ((findCar.EndRent - findCar.StartRent).TotalDays > findCar.DayRentCount)
                 {

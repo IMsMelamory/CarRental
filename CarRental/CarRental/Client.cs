@@ -12,16 +12,9 @@ namespace CarRental
     public class Client : User
     {
         public string NumberDriversLicence { get; set; }
-        Manager Manager { get; set; }
+        public int ManagerID { get; set; }
+        [JsonIgnore]
+        public Manager Manager { get; set; }
 
-        public void ClientAssociateManager(Manager manager)
-        {
-            Manager = manager;
-
-            if (!manager.clients.Contains(this))
-            {
-                manager.clients.Add(this);
-            }
-        }
     }
 }

@@ -10,6 +10,20 @@ namespace CarRental.Repositories
         public ClientsRepository(BaseDataProvider<Client> jsonProvider) : base(jsonProvider)
         {
         }
+        public int FindMaxIDClient()
+        {
+            UpdateDataIfNotExist();
+            var id = _entities.Select(x => x.ID);
+            if (id.Any())
+            {
+                return id.Max();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
 
         public List<Client> FindByLastName(string lastName)
         {

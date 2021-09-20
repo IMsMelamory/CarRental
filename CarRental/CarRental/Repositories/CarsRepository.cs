@@ -13,7 +13,15 @@ namespace CarRental.Repositories
         public int FindMaxIDCar()
         {
             UpdateDataIfNotExist();
-            return _entities.Max(x => x.ID);
+            var id = _entities.Select(x => x.ID);
+            if (id.Any())
+            {
+                return id.Max();
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public void RemoveByCarNumber(string number)
@@ -43,20 +51,6 @@ namespace CarRental.Repositories
         {
             UpdateDataIfNotExist();
             return _entities.Where(x => x.DateRelease == date).ToList();
-        }
-        public List<Car> FindByAviability(bool aviability)
-        {
-            UpdateDataIfNotExist();
-            return _entities.Where(x => x.Availability == aviability).ToList();
-        }
-        public void UpdateAviability(string numberCar, bool aviability)
-        {
-            UpdateDataIfNotExist();
-            foreach (var findcar in this.FindByNumberCar(numberCar))
-            {
-                findcar.Availability = aviability;
-            }
-           ForceUpdate();
         }
     }
 }

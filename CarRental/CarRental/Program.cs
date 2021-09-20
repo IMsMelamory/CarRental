@@ -60,7 +60,14 @@ namespace CarRental
                         {
                             Console.WriteLine("Введите фамилию");
                             var lastName = Console.ReadLine();
-                            managersRepository.RemoveByLastNameManager(lastName); 
+                            if (managersRepository.FindByLastName(lastName) != null)
+                            {
+                                managersRepository.RemoveByLastNameManager(lastName);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Ошибка!Нет такого менеджера");
+                            }
                         }
                         else if (inputManager.ToLower() == "exit")
                         {
@@ -117,6 +124,7 @@ namespace CarRental
                                         BDay = day,
                                         NumberDriversLicence = numberDriverLicense,
                                         ID = clientsRepository.FindMaxIDClient() + 1,
+                                        ManagerID = thisManager.ID,
                                     };
                                     clientsRepository.Add(clientToAdd);
                                     //clientToAdd.ClientAssociateManager((Manager)thisManager);
@@ -143,20 +151,6 @@ namespace CarRental
                                     var colorCar = Console.ReadLine();
                                     Console.WriteLine("Введите год выпуска");
                                     var dataRelease = Console.ReadLine();
-                                    var availabilityBool = false;
-                                    while (true)
-                                    {
-                                        Console.WriteLine("Введите доступна ли машина: true\false");
-                                        var availability = Console.ReadLine();
-                                        if (bool.TryParse(availability, out availabilityBool) == false)
-                                        {
-                                            Console.WriteLine("Ошибка! ВВедите true или false");
-                                        }
-                                        else
-                                        {
-                                            break;
-                                        }
-                                    }
                                     var dayPriceInt = 0;
                                     while (true)
                                     {
@@ -177,7 +171,6 @@ namespace CarRental
                                         Model = modelCar,
                                         Color = colorCar,
                                         DateRelease = dataRelease,
-                                        Availability = availabilityBool,
                                         DayPrice = dayPriceInt,
                                         ID = carRepository.FindMaxIDCar() + 1,
                                     };
@@ -198,8 +191,8 @@ namespace CarRental
                                 case "5":
                                     Console.WriteLine("Поиск по: 1- Фамилия; 2 - Имя; 3 - Отчество; 4 - Водительское удостоверение");
                                     var rezFindClient = Console.ReadLine();
-                                    var parseResultFindClient = int.TryParse(rezFindClient, out var rezfindclient);
-                                    switch (rezfindclient)
+                                    var parseResultFindClient = int.TryParse(rezFindClient, out var rezFindClientInt);
+                                    switch (rezFindClientInt)
                                     {
                                         case 1:
                                         {
@@ -252,10 +245,10 @@ namespace CarRental
                                     }
                                     break;
                                 case "6":
-                                    Console.WriteLine("Поиск по: 1- Номер машины; 2 - Марка машины; 3 - Цвет машины; 4 - Годвыпуска; 5 - Наличие: true\false;");
+                                    Console.WriteLine("Поиск по: 1- Номер машины; 2 - Марка машины; 3 - Цвет машины; 4 - Год выпуска;");
                                     var rezFindCar = Console.ReadLine();
-                                    var parseResultFindCar = int.TryParse(rezFindCar, out var rezfindcar);
-                                    switch (rezfindcar)
+                                    var parseResultFindCar = int.TryParse(rezFindCar, out var rezFindCarInt);
+                                    switch (rezFindCarInt)
                                     {
                                         case 1:
                                         {
@@ -263,7 +256,7 @@ namespace CarRental
                                             var find = Console.ReadLine();
                                             foreach (var cars in carRepository.FindByNumberCar(find))
                                             {
-                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice );
                                             }
                                             break;
                                         }
@@ -273,7 +266,7 @@ namespace CarRental
                                             var find = Console.ReadLine();
                                             foreach (var cars in carRepository.FindByModelCar(find))
                                             {
-                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice);
                                             }
 
                                             break;
@@ -284,7 +277,7 @@ namespace CarRental
                                             var find = Console.ReadLine();
                                             foreach (var cars in carRepository.FindByColorCar(find))
                                             {
-                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice);
                                             }
 
                                             break;
@@ -295,18 +288,7 @@ namespace CarRental
                                             var find = Console.ReadLine();
                                             foreach (var cars in carRepository.FindByDateRelease(find))
                                             {
-                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
-                                            }
-
-                                            break;
-                                        }
-                                        case 5:
-                                        {
-                                            Console.WriteLine("Введите true или false ");
-                                            var find = Console.ReadLine();
-                                            foreach (var cars in carRepository.FindByAviability(bool.TryParse(find, out var findBool) && findBool))
-                                            {
-                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice + cars.Availability);
+                                                Console.WriteLine(cars.Number + " " + cars.Model + " " + cars.Color + " " + cars.DateRelease + " " + cars.DayPrice);
                                             }
 
                                             break;
@@ -325,27 +307,16 @@ namespace CarRental
                                         break;
                                     } 
                                     Console.WriteLine("Введите номер машины");
-                                    var carnumber = Console.ReadLine();
-                                    if (carRepository.FindByNumberCar(carnumber).Count == 0)
+                                    var carNumber = Console.ReadLine();
+                                    if (carRepository.FindByNumberCar(carNumber).Count == 0)
                                     {
                                         Console.WriteLine("Ошибка! Машины  с таким номером не существует");
                                         break;
                                     }
-                                    else
+                                    if (rentRepository.FindRentCar(clientDriverLicense, carNumber) != null)
                                     {
-                                        var count = 0;
-                                        foreach (var car in carRepository.FindByNumberCar(carnumber))
-                                        {
-                                            if (car.Availability == false)
-                                            {
-                                                count++;
-                                            }
-                                        }
-                                        if (count != 0)
-                                        {
-                                            break;
-                                        }
-                                        
+                                        Console.WriteLine("Ошибка! Машина в аренде");
+                                        break;
                                     }
                                     var rentDate = "";
                                     DateTime startRentDate;
@@ -362,6 +333,7 @@ namespace CarRental
                                             break;
                                         }
                                     }
+
                                     var dayRentCountInt = 0;
                                     while (true)
                                     {
@@ -379,35 +351,22 @@ namespace CarRental
                                     var rentToAdd = new Rent()
                                     {
                                         ClientNumberLicense = clientDriverLicense,
-                                        CarNumber = carnumber,
+                                        CarNumber = carNumber,
                                         StartRent = startRentDate,
                                         DayRentCount = dayRentCountInt,
                                         ID = rentRepository.FindMaxIDRent()+1,
                                     };
                                     rentRepository.Add(rentToAdd);
-                                    carRepository.UpdateAviability(carnumber, false);
                                     break;
                                 case "8":
                                     Console.WriteLine("Введите номер удостоверения");
                                     clientDriverLicense = Console.ReadLine();
                                     Console.WriteLine("Введите номер машины");
-                                    carnumber = Console.ReadLine();
-                                    if (rentRepository.FindRentCar(clientDriverLicense, carnumber).Count == 0)
+                                    carNumber = Console.ReadLine();
+                                    if (rentRepository.FindRentCar(clientDriverLicense, carNumber) == null)
                                     {
-                                        Console.WriteLine("Ошибка! Введенной арендованной машины нет");
+                                        Console.WriteLine("Ошибка! Машина возвращена или не существует");
                                         break;
-                                    }
-                                    else
-                                    {
-                                        foreach (var car in carRepository.FindByNumberCar(carnumber))
-                                        {
-                                            if (car.Availability == true)
-                                            {
-                                                Console.WriteLine("Ошибка! Машина уже возвращена!");
-                                                break;
-                                            }
-                                        }
-
                                     }
                                     rentDate = "";
                                     DateTime endRentDate;
@@ -424,16 +383,16 @@ namespace CarRental
                                             break;
                                         }
                                     }
-                                    if (rentRepository.ChekDateEndRent(clientDriverLicense, carnumber, endRentDate) == false)
+                                    if (rentRepository.ChekDateEndRent(clientDriverLicense, carNumber, endRentDate))
                                     {
-                                        Console.WriteLine("Ошибка! Дата окончания аренды раньше начала! Введите корректную дату");
-                                        break;
+                                        rentRepository.UpdateDateEnd(clientDriverLicense, carNumber, endRentDate);
+                                        rentRepository.ChekIsFine(clientDriverLicense, carNumber);
+                                        
                                     }
                                     else
                                     {
-                                        rentRepository.UpdateDateEnd(clientDriverLicense, carnumber, endRentDate);
-                                        rentRepository.ChekIsFine(clientDriverLicense, carnumber);
-                                        carRepository.UpdateAviability(carnumber, true);
+                                        Console.WriteLine("Ошибка! Дата окончания аренды раньше начала! Введите корректную дату");
+                                        break;
                                     }
                                     break;
                                 case "exit":

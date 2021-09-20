@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Timers;
 using CarRental.Providers;
 
 namespace CarRental.Repositories
@@ -10,6 +11,20 @@ namespace CarRental.Repositories
         public ManagersRepository(BaseDataProvider<Manager> jsonProvider) : base(jsonProvider)
         {
         }
+        public int FindMaxIDManagers()
+        {
+            UpdateDataIfNotExist();
+            var id = _entities.Select(x => x.ID);
+            if (id.Any())
+            {
+                return id.Max();
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         public void RemoveByLastNameManager(string lastName)
         {
             var idToRemove = _entities.FirstOrDefault(x => x.LastName == lastName)?.ID;
@@ -17,11 +32,12 @@ namespace CarRental.Repositories
             {
                 RemoveById(idToRemove.Value);
             }
+            
         }
-        public List<Manager> FindByLastName(string lastName)
+        public Manager FindByLastName(string lastName)
         {
             UpdateDataIfNotExist();
-            return _entities.Where(x => x.LastName == lastName).ToList();
+            return _entities.FirstOrDefault(x => x.LastName == lastName);
         }
     }
 }

@@ -15,7 +15,6 @@ namespace CarRental
         public string Model { get; set; }
         public string Color { get; set; }
         public string DateRelease { get; set; }
-        public bool Availability { get; set; }
         public int DayPrice { get; set; }
     }
 }
