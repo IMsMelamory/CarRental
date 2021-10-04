@@ -13,6 +13,7 @@ namespace CarRentalDesktop.Model
         public string Model { get; set; }
         public string Color { get; set; }
         public string DateRelease { get; set; }
-        public int DayPrice { get; set; }
+        public string DayPrice { get; set; }
     }
+
 }

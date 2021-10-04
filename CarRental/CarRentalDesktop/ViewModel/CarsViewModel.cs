@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Configuration;
+using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using CarRentalDesktop.Model;
 
@@ -11,7 +12,7 @@ namespace CarRentalDesktop.ViewModel
         private string _model;
         private string _color;
         private string _dateRelease;
-        private int _dayPrice;
+        private string _dayPrice;
         public string number
         {
             get => _number;
@@ -48,7 +49,7 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged("DateRelease");
             }
         }
-        public int dayPrice
+        public string dayPrice
         {
             get => _dayPrice;
             set
@@ -65,36 +66,59 @@ namespace CarRentalDesktop.ViewModel
             set
             {
                 _selectedCar = value;
+                number = value.Number;
+                model = value.Model;
+                color = value.Color;
+                dateRelease = value.DateRelease;
+                dayPrice = value.DayPrice;
                 OnPropertyChanged("SelectedCar");
             }
         }
         public RelayCommand AddNew { get; set; }
         public RelayCommand Remove { get; set; }
-        public RelayCommand Edit { get; set; }
+        public RelayCommand Clear { get; set; }
         public CarsViewModel()
         {
             Cars = new ObservableCollection<Car>();
             AddNew = new RelayCommand(AddNewCar);
             Remove = new RelayCommand(RemoveCar);
+            Clear = new RelayCommand(ClearCar);
 
         }
         private void AddNewCar(object arg)
         {
             var car = new Car() { Number = number, Model = model, Color = color, DateRelease = dateRelease, DayPrice = dayPrice};
             Cars.Add(car);
-            number = "";
-            color = "";
-            model = "";
+            //SelectedCar = car;
+            number = string.Empty;
+            color = string.Empty;
+            model = string.Empty;
+            dateRelease = string.Empty;
+            dayPrice = string.Empty;
         }
         private void RemoveCar(object arg)
         {
-            Cars.Remove(SelectedCar);
+            if (SelectedCar != null)
+            {
+                Cars.Remove(SelectedCar);
+                number = string.Empty;
+                color = string.Empty;
+                model = string.Empty;
+                dateRelease = string.Empty;
+                dayPrice = string.Empty;
+            }
+
+
         }
-        private void EditCar(object arg)
+        private void ClearCar(object arg)
         {
             if (SelectedCar != null)
             {
-
+                number = string.Empty;
+                color = string.Empty;
+                model = string.Empty;
+                dateRelease = string.Empty;
+                dayPrice = string.Empty;
             }
         }
 

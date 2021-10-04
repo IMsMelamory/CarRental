@@ -113,26 +113,35 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="0.5*" />
         </Grid.ColumnDefinitions>
-        <ListBox Grid.Column="0"  Width="500" Height="400" Style="{DynamicResource myborder}"  ItemsSource="{Binding Path =Cars}" ScrollViewer.VerticalScrollBarVisibility="Auto" Name="ListClient">
+        <ListBox Grid.Column="0"  Width="500" Height="400" DisplayMemberPath =""  Style="{DynamicResource myborder}"  ItemsSource="{Binding Path =Cars}" SelectedItem ="{Binding SelectedCar, Mode = TwoWay}" ScrollViewer.VerticalScrollBarVisibility="Auto" Name="ListClient">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel  Orientation="Horizontal" Margin ="5">
-                        <TextBlock  Text="{Binding Path = Number }"/>
-                        <TextBlock  Text="{Binding Path = Model  }"/>
-                        <TextBlock  Text="{Binding Path = Color }"/>
+                    <StackPanel  Orientation="Horizontal" >
+                        <TextBlock  Padding="0,0,2,0" Text="{Binding Path = Number }"/>
+                        <TextBlock  Padding="0,0,2,0" Text="{Binding Path = Model  }"/>
+                        <TextBlock Padding="0,0,2,0" Text="{Binding Path = Color }"/>
+                        <TextBlock Padding="0,0,2,0" Text="{Binding Path = DateRelease}"/>
+                        <TextBlock Padding="0,0,2,0" Text="{Binding Path = DayPrice }"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel Grid.Column="1" >
             <TextBlock Text="Номер" />
-            <TextBox x:Name="TB1" Text="{Binding Path= number, Mode = TwoWay}" />
+            <TextBox x:Name="TB1" Text="{Binding Path= number, Mode = TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="Модель" />
-            <TextBox Text="{Binding model, Mode = TwoWay}" />
+            <TextBox Text="{Binding model, Mode = TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Text="Цвет" />
-            <TextBox Text="{Binding color, Mode = TwoWay}" />
+            <TextBox Text="{Binding color, Mode = TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="Год выпуска" />
+            <TextBox Text="{Binding dateRelease, Mode = TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock Text="Цена аренды за день" />
+            <TextBox Text="{Binding dayPrice, Mode = TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+
         </StackPanel>
-        <Button Command="{Binding Path=AddNew}" Content="Add" Margin="10,143,60,217" Grid.Column="1"/>
-        <Button Command="{Binding Path=Remove}" CommandParameter="{Binding SelectedCar}" Content="Remove" Margin="10,222,60,138" Grid.Column="1"/>
+        <Button Command="{Binding Path=AddNew}" Content="Add" Margin="15,201,152,191" Grid.Column="1"/>
+        <Button Command="{Binding Path=Remove}" CommandParameter="{Binding SelectedCar}" Content="Remove" Margin="134,201,18,191" Grid.Column="1"/>
+        <Button Command="{Binding Clear}" CommandParameter="{Binding SelectedCar}" Content="Clear" Width="100" Grid.Column="1" Margin="15,264,152,119"/>
     </Grid>
 </Window>
