@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using CarRental.Repositories;
+﻿using System.Linq;
+using CarRentalCore.Model;
+using CarRentalCore.Repositories;
 
-namespace CarRental.Services
+namespace CarRentalCore.Services
 {
     class ClientManagerAssociateService
     {

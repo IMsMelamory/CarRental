@@ -1,8 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using CarRentalDesktop.Model;
+using CarRentalCore.Model;
+using CarRentalCore.Providers;
+using CarRentalCore.Repositories;
+using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
@@ -12,116 +12,125 @@ namespace CarRentalDesktop.ViewModel
         private string _model;
         private string _color;
         private string _dateRelease;
-        private string _dayPrice;
-        public string number
+        private int _dayPrice;
+        private Car _selectedCar;
+        
+        public CarsViewModel()
+        {
+            AddNew = new RelayCommand(AddNewCar);
+            Remove = new RelayCommand(RemoveCar);
+            Clear = new RelayCommand(ClearCar);
+            
+            CarRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
+            
+            Cars = new ObservableCollection<Car>(CarRepository.GetAll());
+
+            var clientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
+            var managersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
+            var rentRepository = new RentsRepository(new JsonProvider<Rent>("rent.json"));
+
+        }
+
+        public CarsRepository CarRepository { get; set; }
+
+        public string Number
         {
             get => _number;
             set
             {
                 _number = value;
-                OnPropertyChanged("Number");
+                OnPropertyChanged();
             }
         }
-        public string model
+        public string Model
         {
             get => _model;
             set
             {
                 _model = value;
-                OnPropertyChanged("Model");
+                OnPropertyChanged();
             }
         }
-        public string color
+        public string Color
         {
             get => _color;
             set
             {
                 _color = value;
-                OnPropertyChanged("Color");
+                OnPropertyChanged();
             }
         }
-        public string dateRelease
+        public string DateRelease
         {
             get => _dateRelease;
             set
             {
                 _dateRelease = value;
-                OnPropertyChanged("DateRelease");
+                OnPropertyChanged();
             }
         }
-        public string dayPrice
+        public int DayPrice
         {
             get => _dayPrice;
             set
             {
                 _dayPrice = value;
-                OnPropertyChanged("DayPrice");
+                OnPropertyChanged();
             }
         }
-        private Car _selectedCar;
         public ObservableCollection<Car> Cars { get; set; }
+        
         public Car SelectedCar
         {
-            get { return _selectedCar; }
+            get => _selectedCar;
             set
             {
                 _selectedCar = value;
-                number = value.Number;
-                model = value.Model;
-                color = value.Color;
-                dateRelease = value.DateRelease;
-                dayPrice = value.DayPrice;
-                OnPropertyChanged("SelectedCar");
+                Number = value.Number;
+                Model = value.Model;
+                Color = value.Color;
+                DateRelease = value.DateRelease;
+                DayPrice = value.DayPrice;
+                OnPropertyChanged();
             }
         }
         public RelayCommand AddNew { get; set; }
         public RelayCommand Remove { get; set; }
         public RelayCommand Clear { get; set; }
-        public CarsViewModel()
-        {
-            Cars = new ObservableCollection<Car>();
-            AddNew = new RelayCommand(AddNewCar);
-            Remove = new RelayCommand(RemoveCar);
-            Clear = new RelayCommand(ClearCar);
-
-        }
         private void AddNewCar(object arg)
         {
-            var car = new Car() { Number = number, Model = model, Color = color, DateRelease = dateRelease, DayPrice = dayPrice};
+            var car = new Car() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice};
             Cars.Add(car);
-            //SelectedCar = car;
-            number = string.Empty;
-            color = string.Empty;
-            model = string.Empty;
-            dateRelease = string.Empty;
-            dayPrice = string.Empty;
+            SelectedCar = car;
+            ClearFields();
+            
+            CarRepository.Add(car);
         }
+
+        private void ClearFields()
+        {
+            Number = string.Empty;
+            Color = string.Empty;
+            Model = string.Empty;
+            DateRelease = string.Empty;
+            DayPrice = 0;
+        }
+
         private void RemoveCar(object arg)
         {
             if (SelectedCar != null)
             {
                 Cars.Remove(SelectedCar);
-                number = string.Empty;
-                color = string.Empty;
-                model = string.Empty;
-                dateRelease = string.Empty;
-                dayPrice = string.Empty;
+                ClearFields();
             }
-
-
         }
+        
         private void ClearCar(object arg)
         {
             if (SelectedCar != null)
             {
-                number = string.Empty;
-                color = string.Empty;
-                model = string.Empty;
-                dateRelease = string.Empty;
-                dayPrice = string.Empty;
+                ClearFields();
             }
         }
-
-
     }
 }

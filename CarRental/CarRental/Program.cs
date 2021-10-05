@@ -1,6 +1,7 @@
 ﻿using System;
-using CarRental.Providers;
-using CarRental.Repositories;
+using CarRentalCore.Model;
+using CarRentalCore.Providers;
+using CarRentalCore.Repositories;
 
 namespace CarRental
 {

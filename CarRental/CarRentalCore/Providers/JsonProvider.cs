@@ -1,9 +1,9 @@
-﻿using System.IO;
-using System.Collections.Generic;
-using CarRental.Entities;
+﻿using System.Collections.Generic;
+using System.IO;
+using CarRentalCore.Model;
 using Newtonsoft.Json;
 
-namespace CarRental.Providers
+namespace CarRentalCore.Providers
 {
     public class JsonProvider<T> : BaseDataProvider<T> where T : BaseEntity
     {

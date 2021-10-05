@@ -10,4 +10,8 @@
     <Folder Include="View\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CarRentalCore\CarRentalCore.csproj" />
+  </ItemGroup>
+  
 </Project>

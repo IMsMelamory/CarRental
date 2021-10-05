@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using CarRental.Entities;
+using CarRentalCore.Model;
 
-namespace CarRental.Providers
+namespace CarRentalCore.Providers
 {
     public class MssqlProvider<T> : BaseDataProvider<T> where T : BaseEntity
     {

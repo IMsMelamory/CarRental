@@ -1,7 +1,6 @@
 ﻿using System;
-using CarRental.Entities;
 
-namespace CarRental
+namespace CarRentalCore.Model
 {
     public class User : BaseEntity
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CarRental.Entities;
-using CarRental.Providers;
+using CarRentalCore.Model;
+using CarRentalCore.Providers;
 
-namespace CarRental.Repositories
+namespace CarRentalCore.Repositories
 {
     public class Repository<T> where T : BaseEntity
     {

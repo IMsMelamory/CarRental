@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System;
-using System.Timers;
-using CarRental.Providers;
+﻿using System.Linq;
+using CarRentalCore.Model;
+using CarRentalCore.Providers;
 
-namespace CarRental.Repositories
+namespace CarRentalCore.Repositories
 {
     public class ManagersRepository : Repository<Manager>
     {

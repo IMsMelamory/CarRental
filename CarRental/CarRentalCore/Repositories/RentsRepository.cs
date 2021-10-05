@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System;
-using System.ComponentModel.Design;
-using CarRental.Providers;
+using CarRentalCore.Model;
+using CarRentalCore.Providers;
 
-namespace CarRental.Repositories
+namespace CarRentalCore.Repositories
 {
     public class RentsRepository : Repository<Rent>
     {

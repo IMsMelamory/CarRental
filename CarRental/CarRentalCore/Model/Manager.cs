@@ -1,11 +1,7 @@
-﻿using System;
-using System.IO;
-using Newtonsoft.Json;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-
-namespace CarRental
+namespace CarRentalCore.Model
 {
     public class Manager: User
     {

@@ -1,4 +1,4 @@
-﻿namespace CarRental.Entities
+﻿namespace CarRentalCore.Model
 {
     public abstract class BaseEntity
     {

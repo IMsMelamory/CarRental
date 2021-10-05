@@ -1,8 +1,6 @@
 ﻿using System;
-using CarRental.Entities;
-using CarRental.Repositories;
 
-namespace CarRental
+namespace CarRentalCore.Model
 {
    public  class Rent : BaseEntity
     {
