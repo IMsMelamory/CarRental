@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using CarRentalCore.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CarRentalCore.Providers
 {
@@ -15,8 +19,8 @@ namespace CarRentalCore.Providers
             _jsonPath = jsonPath;
             _jsonSettings = new JsonSerializerSettings
             {
-                TypeNameHandling = TypeNameHandling.Objects,
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
             };
         }
 
@@ -25,7 +29,9 @@ namespace CarRentalCore.Providers
             var jsonData = "";
             if (File.Exists(_jsonPath))
             {
+
                 jsonData = File.ReadAllText(_jsonPath);
+                    
             }
             else
             {
