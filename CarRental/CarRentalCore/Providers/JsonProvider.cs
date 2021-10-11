@@ -19,8 +19,10 @@ namespace CarRentalCore.Providers
             _jsonPath = jsonPath;
             _jsonSettings = new JsonSerializerSettings
             {
-                TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+                TypeNameHandling = TypeNameHandling.Objects,
+                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                /* TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+                 PreserveReferencesHandling = PreserveReferencesHandling.Objects,*/
             };
         }
 
@@ -29,7 +31,6 @@ namespace CarRentalCore.Providers
             var jsonData = "";
             if (File.Exists(_jsonPath))
             {
-
                 jsonData = File.ReadAllText(_jsonPath);
                     
             }

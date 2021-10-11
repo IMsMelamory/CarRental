@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Controls;
 using CarRentalCore.Model;
 using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
@@ -6,75 +7,38 @@ using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class CarsViewModel: BaseViewModel
+    public class CarsViewModel: CarViewModel
     {
-        private string _number;
-        private string _model;
-        private string _color;
-        private string _dateRelease;
-        private int _dayPrice;
-        private CarsViewModel _selectedCar;
         
+        private CarsViewModel _selectedCar;
+        private string _ButtonContent;
+        public string ButtonContent
+        {
+            get => _ButtonContent;
+            set
+            {
+                _ButtonContent = value;
+                OnPropertyChanged();
+            }
+        }
         public CarsViewModel()
         {
-            AddNew = new RelayCommand(AddNewCar);
-            Remove = new RelayCommand(RemoveCar);
-            Clear = new RelayCommand(ClearCar);
+            AddNew = new RelayCommand(AddNewCar, IsSelected);
+            Remove = new RelayCommand(RemoveCar, IsEnable);
+            Clear = new RelayCommand(ClearCar, IsEnable);
             var carsListViewModel = new CarMapper();
             var carRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
-            var mylist = carsListViewModel.ListCarsViewModel(carRepository.GetAll());
-            Cars = new TrulyObservableCollection<CarsViewModel>(mylist);
+            //var listCars = carRepository.GetAll();
+            //var mylist =carsListViewModel.ListCarsViewModel(carRepository.GetAll()) ; что-то неправильное!!!!!!!
+            Cars = new TrulyObservableCollection<CarsViewModel>();
+            
         }
 
        public TrulyObservableCollection<CarsViewModel> Cars { get; set; }
        // public CarsRepository CarRepository { get; set; }
         //public CarMapper CarsListViewModel { get; set; }
-        //public List<CarsViewModel> CarsView { get; set; } = new List<CarsViewModel>();
-        public string Number
-        {
-            get => _number;
-            set
-            {
-                _number = value;
-                OnPropertyChanged();
-            }
-        }
-        public string Model
-        {
-            get => _model;
-            set
-            {
-                _model = value;
-                OnPropertyChanged();
-            }
-        }
-        public string Color
-        {
-            get => _color;
-            set
-            {
-                _color = value;
-                OnPropertyChanged();
-            }
-        }
-        public string DateRelease
-        {
-            get => _dateRelease;
-            set
-            {
-                _dateRelease = value;
-                OnPropertyChanged();
-            }
-        }
-        public int DayPrice
-        {
-            get => _dayPrice;
-            set
-            {
-                _dayPrice = value;
-                OnPropertyChanged();
-            }
-        }
+        public List<CarsViewModel> CarsView { get; set; } = new List<CarsViewModel>();
+        
        
         
         public CarsViewModel SelectedCar
@@ -98,7 +62,7 @@ namespace CarRentalDesktop.ViewModel
         {
             var car = new CarsViewModel() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice};
             Cars.Add(car);
-            SelectedCar = car;
+           // SelectedCar = car;
             ClearFields();
             
             //CarRepository.Add(car);
@@ -119,8 +83,10 @@ namespace CarRentalDesktop.ViewModel
             {
                 Cars.Remove(SelectedCar);
                 ClearFields();
-                //CarRepository.Remove(SelectedCar);
             }
+
+            //CarRepository.Remove(SelectedCar);
+            
         }
         
         private void ClearCar(object arg)
@@ -129,6 +95,23 @@ namespace CarRentalDesktop.ViewModel
             {
                 ClearFields();
             }
+        }
+        private bool IsEnable (object value)
+        {
+            return SelectedCar != null;
+        }
+        private bool IsSelected(object value)
+        {
+            if (SelectedCar == null)
+            {
+                ButtonContent = "Add";
+            }
+            else
+            {
+                ButtonContent = "Edit";
+            }
+            return true;
+            
         }
     }
 }

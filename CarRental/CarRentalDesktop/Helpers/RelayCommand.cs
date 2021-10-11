@@ -10,6 +10,7 @@ namespace CarRentalDesktop.Helpers
         private RelayCommand addCommand;
         private Func<object, bool> canAdd;
 
+
         public event EventHandler CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
@@ -28,6 +29,7 @@ namespace CarRentalDesktop.Helpers
             this.canAdd = canAdd;
         }
 
+       
         public bool CanExecute(object parameter)
         {
             return this.canExecute == null || this.canExecute(parameter);

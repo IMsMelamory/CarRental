@@ -9,7 +9,7 @@ namespace CarRentalDesktop.ViewModel
     {
         public List<CarsViewModel> ListViewModel(List<Car> cars)
         {
-            return cars.ConvertAll(x=> new CarsViewModel());
+            return cars.ConvertAll(x => new CarsViewModel());
         }
         public List<Car> ListCars(List<CarsViewModel> carsViewModel)
         {

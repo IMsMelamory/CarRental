@@ -56,7 +56,7 @@
                     Grid.Column="0"  
                     Height="30"
                     Command="{Binding Path=AddNew}"
-                    Content="Add"  />
+                    Content="{Binding Path=ButtonContent}"  />
             <Button Grid.Row="1" 
                     Grid.Column="1" 
                     Height="30"
