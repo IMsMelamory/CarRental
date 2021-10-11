@@ -41,7 +41,7 @@
                 <StackPanel Orientation="Vertical" 
                             Margin="5">
                 <TextBlock Text="Номер" />
-                <TextBox  Text="{Binding Path= Number, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox  Text="{Binding Path= Number, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
                 <TextBlock Text="Модель" />
                 <TextBox Text="{Binding Model,  UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="Цвет" />

@@ -102,13 +102,13 @@ namespace CarRentalDesktop.ViewModel
         }
         private bool IsSelected(object value)
         {
-            if (SelectedCar == null)
+            if (SelectedCar != null)
             {
-                ButtonContent = "Add";
+                ButtonContent = "Edit";
             }
             else
             {
-                ButtonContent = "Edit";
+                ButtonContent = "Add";
             }
             return true;
             
