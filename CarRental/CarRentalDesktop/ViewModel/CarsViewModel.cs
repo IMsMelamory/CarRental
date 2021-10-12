@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 using CarRentalCore.Model;
 using CarRentalCore.Providers;
@@ -7,7 +8,7 @@ using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class CarsViewModel: CarViewModel
+    public class CarsViewModel: CarsMapper
     {
         
         private CarsViewModel _selectedCar;
@@ -26,18 +27,16 @@ namespace CarRentalDesktop.ViewModel
             AddNew = new RelayCommand(AddNewCar, IsSelected);
             Remove = new RelayCommand(RemoveCar, IsEnable);
             Clear = new RelayCommand(ClearCar, IsEnable);
-            var carsListViewModel = new CarMapper();
             var carRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
-            //var listCars = carRepository.GetAll();
-            //var mylist =carsListViewModel.ListCarsViewModel(carRepository.GetAll()) ; что-то неправильное!!!!!!!
+            //var carsVM = ListViewModel(carRepository.GetAll());
             Cars = new TrulyObservableCollection<CarsViewModel>();
             
         }
 
        public TrulyObservableCollection<CarsViewModel> Cars { get; set; }
        // public CarsRepository CarRepository { get; set; }
-        //public CarMapper CarsListViewModel { get; set; }
-        public List<CarsViewModel> CarsView { get; set; } = new List<CarsViewModel>();
+       public List<CarsViewModel> CarsView { get; set; } 
+        
         
        
         
@@ -60,7 +59,7 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand Clear { get; set; }
         private void AddNewCar(object arg)
         {
-            var car = new CarsViewModel() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice};
+            var car = new CarsViewModel() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice, ID = 1};
             Cars.Add(car);
            // SelectedCar = car;
             ClearFields();

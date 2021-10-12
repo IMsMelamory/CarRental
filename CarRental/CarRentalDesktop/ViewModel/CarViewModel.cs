@@ -13,6 +13,7 @@ namespace CarRentalDesktop.ViewModel
         private string _color;
         private string _dateRelease;
         private int _dayPrice;
+        private int _id;
         public string Number
         {
             get => _number;
@@ -55,6 +56,15 @@ namespace CarRentalDesktop.ViewModel
             set
             {
                 _dayPrice = value;
+                OnPropertyChanged();
+            }
+        }
+        public int ID
+        {
+            get => _id;
+            set
+            {
+                _id = value;
                 OnPropertyChanged();
             }
         }

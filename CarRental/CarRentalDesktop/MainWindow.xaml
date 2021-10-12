@@ -35,7 +35,6 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Grid.Column="0" ColumnSpan="2" >
                 <StackPanel Orientation="Vertical" 
@@ -63,13 +62,6 @@
                     Command="{Binding Path=Remove}" 
                     CommandParameter="{Binding SelectedCar}" 
                     Content="Remove"/>
-            <Button Grid.Row="2" 
-                    Grid.Column="0"  
-                    Grid.ColumnSpan="2"
-                    Height="30"
-                    Command="{Binding Clear}" 
-                    CommandParameter="{Binding SelectedCar}" 
-                    Content="Clear" />
         </Grid>
     </Grid>
 </Window>
