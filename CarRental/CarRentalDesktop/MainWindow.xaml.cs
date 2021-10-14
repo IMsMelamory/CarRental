@@ -24,7 +24,7 @@ namespace CarRentalDesktop
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new CarsViewModel();
+            DataContext = new MainViewModel();
         }
     }
 }

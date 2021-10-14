@@ -1,4 +1,7 @@
-﻿namespace CarRentalCore.Model
+﻿using System.Collections.Specialized;
+using System.ComponentModel;
+
+namespace CarRentalCore.Model
 {
     public abstract class BaseEntity
     {

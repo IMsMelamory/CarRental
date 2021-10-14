@@ -1,4 +1,7 @@
-﻿namespace CarRentalCore.Model
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace CarRentalCore.Model
 {
     public class Car : BaseEntity
     {
@@ -7,5 +10,6 @@
         public string Color { get; set; }
         public string DateRelease { get; set; }
         public int DayPrice { get; set; }
+        
     }
 }

@@ -8,18 +8,13 @@ using System.ComponentModel;
 namespace CarRentalDesktop.ViewModel
 {
     public sealed class TrulyObservableCollection<T> : ObservableCollection<T>
-        where T : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler ItemPropertyChanged;
-
         public TrulyObservableCollection()
-            : base()
         {
-            CollectionChanged += new NotifyCollectionChangedEventHandler(TrulyObservableCollection_CollectionChanged);
+            CollectionChanged += FullObservableCollectionCollectionChanged;
         }
 
-        public TrulyObservableCollection(IEnumerable<T> pItems)
-            : this()
+        public TrulyObservableCollection(IEnumerable<T> pItems) : this()
         {
             foreach (var item in pItems)
             {
@@ -27,35 +22,31 @@ namespace CarRentalDesktop.ViewModel
             }
         }
 
-        void TrulyObservableCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void FullObservableCollectionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
             {
                 foreach (Object item in e.NewItems)
                 {
-                    (item as INotifyPropertyChanged).PropertyChanged += new PropertyChangedEventHandler(item_PropertyChanged);
+                    ((INotifyPropertyChanged)item).PropertyChanged += ItemPropertyChanged;
                 }
             }
             if (e.OldItems != null)
             {
                 foreach (Object item in e.OldItems)
                 {
-                    (item as INotifyPropertyChanged).PropertyChanged -= new PropertyChangedEventHandler(item_PropertyChanged);
+                    ((INotifyPropertyChanged)item).PropertyChanged -= ItemPropertyChanged;
                 }
             }
         }
 
-        void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            NotifyCollectionChangedEventArgs a = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
-            OnCollectionChanged(a);
-
-            if (ItemPropertyChanged != null)
-            {
-                ItemPropertyChanged(sender, e);
-            }
+            NotifyCollectionChangedEventArgs args = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Replace, sender, sender, IndexOf((T)sender));
+            OnCollectionChanged(args);
         }
     }
-
 }
+
+
 
