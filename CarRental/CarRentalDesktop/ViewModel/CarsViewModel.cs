@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
+using AutoMapper;
 using CarRentalCore.Model;
 using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
@@ -9,7 +9,7 @@ using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class CarsViewModel: CarViewModel
+    public class CarsViewModel: CarsMapper
     {
         
         private Car _selectedCar;
@@ -29,18 +29,21 @@ namespace CarRentalDesktop.ViewModel
             Remove = new RelayCommand(RemoveCar, IsEnable);
             Clear = new RelayCommand(ClearCar, IsEnable);
             CarRepository= new CarsRepository(new JsonProvider<Car>("cars.json"));
-            var list = CarRepository.GetAll();
+            var l = CarRepository.GetAll();
+            //var list2 = C.CarsToVm(l);
+           // Cars1 = new ObservableCollection<CarsViewModel>(CarsToVm(l));
             Cars = new ObservableCollection<Car>(CarRepository.GetAll());
 
         }
 
+
        public ObservableCollection<Car> Cars { get; set; }
        public CarsRepository CarRepository { get; set; }
-       //public List<CarsViewModel> CarsView{ get; set; }
-        
-        
-       
-        
+       //public ObservableCollection<CarsViewModel> Cars1 { get; set; }
+       //public CarsMapper C { get; set; }
+       //public List<CarsViewModel> L2 { get; set; }
+
+
         public Car SelectedCar
         {
             get => _selectedCar;
