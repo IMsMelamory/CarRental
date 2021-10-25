@@ -16,7 +16,7 @@
             </Grid.ColumnDefinitions>
             <ListBox Grid.Column="0" 
                  ItemsSource="{Binding Path =Cars}"
-                 SelectedItem="{Binding SelectedCar, Mode = TwoWay}">
+                 SelectedItem="{Binding SelectedCar}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -75,7 +75,7 @@
                 </Grid.ColumnDefinitions>
                 <ListBox Grid.Column="0" 
                  ItemsSource="{Binding Path =Clients}"
-                 SelectedItem="{Binding Path =SelectedClient, Mode = TwoWay}">
+                 SelectedItem="{Binding Path =SelectedClient}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

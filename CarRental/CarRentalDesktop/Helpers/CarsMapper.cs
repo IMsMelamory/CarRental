@@ -9,18 +9,27 @@ namespace CarRentalDesktop.ViewModel
 {
     public class CarsMapper : CarViewModel
     {
-        public List<CarsViewModel> CarsToVm(List<Car> cars)
+        public List<CarViewModel> ToViewModel(List<Car> cars)
         {
-            var mylist = cars.Select(x => new CarsViewModel()
+          return cars.Select(x => new CarViewModel()
+          {
+              Number = x.Number,
+              Model = x.Model,
+              Color = x.Color,
+              DateRelease = x.DateRelease,
+              DayPrice = x.DayPrice
+          }).ToList();
+        }
+        public Car ToCar(CarViewModel vmCar)
+        {
+            return  new Car()
             {
-                Number = x.Number,
-                Model = x.Model,
-                Color = x.Color,
-                DateRelease = x.DateRelease,
-                DayPrice = x.DayPrice,
-                ID = x.ID
-            }).ToList();
-          return mylist;
+                Number = vmCar.Number,
+                Model = vmCar.Model,
+                Color = vmCar.Color,
+                DateRelease = vmCar.DateRelease,
+                DayPrice = vmCar.DayPrice
+            };
         }
     }
 }

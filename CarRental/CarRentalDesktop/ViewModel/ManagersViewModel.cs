@@ -13,7 +13,47 @@ namespace CarRentalDesktop.ViewModel
 {
     public class ManagersViewModel: ManagerViewModel
     {
-        private Manager _selectedManager;
+        private string _name;
+        private string _lastName;
+        private string _secondLastName;
+        private string _bDay;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+        public string LastName
+        {
+            get => _lastName;
+            set
+            {
+                _lastName = value;
+                OnPropertyChanged();
+            }
+        }
+        public string SecondLastName
+        {
+            get => _secondLastName;
+            set
+            {
+                _secondLastName = value;
+                OnPropertyChanged();
+            }
+        }
+        public string BDay
+        {
+            get => _bDay;
+            set
+            {
+                _bDay = value;
+                OnPropertyChanged();
+            }
+        }
+        private ManagerViewModel _selectedManager;
         private string _buttonContent;
         public string ButtonContent
         {
@@ -30,22 +70,26 @@ namespace CarRentalDesktop.ViewModel
             Remove = new RelayCommand(RemoveManager, IsEnable);
             //Clear = new RelayCommand(ClearClient, IsEnable);
             ManagersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
-            Managers = new ObservableCollection<Manager>(ManagersRepository.GetAll());
+            Managers = new ObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()));
         }
 
-        public ObservableCollection<Manager> Managers{ get; set; }
+        public ObservableCollection<ManagerViewModel> Managers{ get; set; }
         public ManagersRepository ManagersRepository { get; set; }
+        public ManagersMapper ManagerMap { get; set; } = new ManagersMapper();
 
-        public Manager SelectedManager
+        public ManagerViewModel SelectedManager
         {
             get => _selectedManager;
             set
             {
                 _selectedManager = value;
-                Name = value.Name;
-                LastName = value.LastName;
-                SecondLastName = value.SecondLastName;
-                BDay = value.BDay.ToString();
+                if (SelectedManager != null)
+                {
+                    Name = value.Name;
+                    LastName = value.LastName;
+                    SecondLastName = value.SecondLastName;
+                    BDay = BDay;
+                }
                 OnPropertyChanged();
             }
         }
@@ -54,10 +98,10 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand Clear { get; set; }
         private void AddNewManager(object arg)
         {
-            var manager= new Manager() { Name = Name, LastName = LastName, SecondLastName = SecondLastName, BDay = DateTime.Parse(BDay), ID = ManagersRepository.FindMaxIDManagers() + 1 };
+            var manager= new ManagerViewModel() { Name = Name, LastName = LastName, SecondLastName = SecondLastName, BDay = DateTime.Parse(BDay) };
             Managers.Add(manager);
             ClearFields();
-            ManagersRepository.Add(manager);
+            ManagersRepository.Add(ManagerMap.ToManager(manager));
         }
 
         private void ClearFields()
@@ -65,14 +109,14 @@ namespace CarRentalDesktop.ViewModel
             Name = string.Empty;
             LastName = string.Empty;
             SecondLastName = string.Empty;
-            BDay = string.Empty;
+           // BDay = string.Empty;
         }
 
         private void RemoveManager(object arg)
         {
             if (SelectedManager != null)
             {
-                ManagersRepository.Remove(SelectedManager);
+                ManagersRepository.Remove(ManagerMap.ToManager(SelectedManager));
                 Managers.Remove(SelectedManager);
                 ClearFields();
             }

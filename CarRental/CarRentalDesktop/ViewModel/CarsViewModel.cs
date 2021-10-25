@@ -1,25 +1,71 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using AutoMapper;
-using CarRentalCore.Model;
+﻿using CarRentalCore.Model;
 using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
 using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class CarsViewModel: CarsMapper
+    public class CarsViewModel: CarViewModel
     {
         
-        private Car _selectedCar;
-        private string _ButtonContent;
+        private CarViewModel _selectedCar;
+        private string _buttonContent;
         public string ButtonContent
         {
-            get => _ButtonContent;
+            get => _buttonContent;
             set
             {
-                _ButtonContent = value;
+                _buttonContent = value;
+                OnPropertyChanged();
+            }
+        }
+        private string _number;
+        private string _model;
+        private string _color;
+        private string _dateRelease;
+        private int _dayPrice;
+        public string Number
+        {
+            get => _number;
+            set
+            {
+                _number = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Model
+        {
+            get => _model;
+            set
+            {
+                _model = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Color
+        {
+            get => _color;
+            set
+            {
+                _color = value;
+                OnPropertyChanged();
+            }
+        }
+        public string DateRelease
+        {
+            get => _dateRelease;
+            set
+            {
+                _dateRelease = value;
+                OnPropertyChanged();
+            }
+        }
+        public int DayPrice
+        {
+            get => _dayPrice;
+            set
+            {
+                _dayPrice = value;
                 OnPropertyChanged();
             }
         }
@@ -28,23 +74,16 @@ namespace CarRentalDesktop.ViewModel
             AddNew = new RelayCommand(AddNewCar, IsSelected);
             Remove = new RelayCommand(RemoveCar, IsEnable);
             Clear = new RelayCommand(ClearCar, IsEnable);
-            CarRepository= new CarsRepository(new JsonProvider<Car>("cars.json"));
-            var l = CarRepository.GetAll();
-            //var list2 = C.CarsToVm(l);
-           // Cars1 = new ObservableCollection<CarsViewModel>(CarsToVm(l));
-            Cars = new ObservableCollection<Car>(CarRepository.GetAll());
+            CarRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
+            Cars = new ObservableCollectionEx<CarViewModel>(CarVM.ToViewModel(CarRepository.GetAll()));
 
         }
-
-
-       public ObservableCollection<Car> Cars { get; set; }
+       public ObservableCollectionEx<CarViewModel> Cars { get; set; }
        public CarsRepository CarRepository { get; set; }
-       //public ObservableCollection<CarsViewModel> Cars1 { get; set; }
-       //public CarsMapper C { get; set; }
-       //public List<CarsViewModel> L2 { get; set; }
+       public CarsMapper CarVM { get; set; } = new CarsMapper();
 
 
-        public Car SelectedCar
+        public CarViewModel SelectedCar
         {
             get => _selectedCar;
             set
@@ -63,11 +102,10 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand Clear { get; set; }
         private void AddNewCar(object arg)
         {
-            var car = new Car() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice, ID = 1};
+            var car = new CarViewModel() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice};
             Cars.Add(car);
-           // SelectedCar = car;
             ClearFields();
-            CarRepository.Add(car);
+            CarRepository.Add(CarVM.ToCar(car));
         }
 
         private void ClearFields()
@@ -83,15 +121,14 @@ namespace CarRentalDesktop.ViewModel
         {
             if (SelectedCar != null)
             {
-                CarRepository.Remove(SelectedCar);
+                CarRepository.Remove(CarVM.ToCar(SelectedCar));
                 Cars.Remove(SelectedCar);
                 ClearFields();
             }
 
             
             
-        }
-        
+        }       
         private void ClearCar(object arg)
         {
             if (SelectedCar != null)
@@ -116,5 +153,6 @@ namespace CarRentalDesktop.ViewModel
             return true;
             
         }
+
     }
 }
