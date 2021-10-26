@@ -159,5 +159,6 @@ namespace CarRentalDesktop.ViewModel
             ButtonContentClient = SelectedClient != null ? "Edit" : "Add";
             return true;
         }
+        public override string Header => "ClientsViewModel";
     }
 }

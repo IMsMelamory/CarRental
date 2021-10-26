@@ -19,7 +19,8 @@ namespace CarRentalDesktop.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
+        public virtual string Header { get; }
     }
 }
+
 

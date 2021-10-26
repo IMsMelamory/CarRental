@@ -140,5 +140,6 @@ namespace CarRentalDesktop.ViewModel
             return true;
 
         }
+        public override string Header => "ManagersViewModel";
     }
 }
