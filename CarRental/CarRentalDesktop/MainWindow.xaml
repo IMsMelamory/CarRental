@@ -7,67 +7,67 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
         Title="CarRentalClient">
-    <TabControl >
-        <TabItem Header="Cars" DataContext="{Binding Children[0]}" >
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <ListBox Grid.Column="0" 
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModel:CarsViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ListBox Grid.Column="0" 
                  ItemsSource="{Binding Path =Cars}"
                  SelectedItem="{Binding SelectedCar}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Padding="0,0,2,0" Text="{Binding Path = Number }" />
-                            <TextBlock Padding="0,0,2,0" Text="{Binding Path = Model  }" />
-                            <TextBlock Padding="0,0,2,0" Text="{Binding Path = Color }" />
-                            <TextBlock Padding="0,0,2,0" Text="{Binding Path = DateRelease}" />
-                            <TextBlock Padding="0,0,2,0" Text="{Binding Path = DayPrice }" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <Grid Grid.Column="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Grid.Column="0" ColumnSpan="2" >
-                    <StackPanel Orientation="Vertical" 
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = Number }" />
+                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = Model  }" />
+                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = Color }" />
+                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = DateRelease}" />
+                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = DayPrice }" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0" ColumnSpan="2" >
+                        <StackPanel Orientation="Vertical" 
                             Margin="5">
-                        <TextBlock Text="Номер" />
-                        <TextBox  MaxLength="20" Text="{Binding Path= Number, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
-                        <TextBlock Text="Модель" />
-                        <TextBox MaxLength="20" Text="{Binding Model,  UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Text="Цвет" />
-                        <TextBox MaxLength="20" Text="{Binding Color,  UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Text="Год выпуска" />
-                        <TextBox MaxLength="20" Text="{Binding DateRelease,  UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock Text="Цена аренды за день" />
-                        <TextBox MaxLength="20" Text="{Binding DayPrice,  UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                </Grid>
-                <Button Grid.Row="1"
+                            <TextBlock Text="Номер" />
+                            <TextBox  MaxLength="20" Text="{Binding Path= Number, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            <TextBlock Text="Модель" />
+                            <TextBox MaxLength="20" Text="{Binding Model,  UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Цвет" />
+                            <TextBox MaxLength="20" Text="{Binding Color,  UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Год выпуска" />
+                            <TextBox MaxLength="20" Text="{Binding DateRelease,  UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Цена аренды за день" />
+                            <TextBox MaxLength="20" Text="{Binding DayPrice,  UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Grid>
+                    <Button Grid.Row="1"
                     Grid.Column="0"  
                     Height="30"
                     Command="{Binding Path=AddNew}"
                     Content="{Binding Path=ButtonContent}"  />
-                <Button Grid.Row="1" 
+                    <Button Grid.Row="1" 
                     Grid.Column="1" 
                     Height="30"
                     Command="{Binding Path=Remove}" 
                     CommandParameter="{Binding SelectedCar}" 
                     Content="Remove"/>
+                </Grid>
             </Grid>
-        </Grid>
-        </TabItem>
-        <TabItem Header="Clients"  DataContext="{Binding Children[1]}">
+        </DataTemplate>
+        <DataTemplate  DataType="{x:Type viewModel:ClientsViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -125,8 +125,8 @@
                     Content="Remove"/>
                 </Grid>
             </Grid>
-        </TabItem>
-        <TabItem Header="Managers"  DataContext="{Binding Children[2]}">
+        </DataTemplate>
+        <DataTemplate  DataType="{x:Type viewModel:ManagersViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -181,6 +181,14 @@
                     Content="Remove"/>
                 </Grid>
             </Grid>
-        </TabItem>
+        </DataTemplate>
+    </Window.Resources>
+    <TabControl ItemsSource="{Binding Tab}" 
+                SelectedItem="{Binding SelectedTab}">
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding Header}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </DataTemplate>
+        </TabControl.ItemTemplate>
     </TabControl>
 </Window>

@@ -153,6 +153,6 @@ namespace CarRentalDesktop.ViewModel
             return true;
             
         }
-        public override string Header => "CarsViewModel";
+        public override string Header => "Cars";
     }
 }

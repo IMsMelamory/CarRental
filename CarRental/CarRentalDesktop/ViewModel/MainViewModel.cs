@@ -7,19 +7,16 @@ using System.Threading.Tasks;
 
 namespace CarRentalDesktop.ViewModel
 {
-    class MainViewModel: BaseViewModel
+    class MainViewModel: BaseTab
     {
-        ObservableCollection<object> _children;
-
-
+       
         public MainViewModel()
         {
-            _children = new ObservableCollection<object>();
-            _children.Add(new CarsViewModel());
-            _children.Add(new ClientsViewModel());
-            _children.Add(new ManagersViewModel());
+            Tab = new ObservableCollection<object>();
+            Tab.Add(new CarsViewModel());
+            Tab.Add(new ClientsViewModel());
+            Tab.Add(new ManagersViewModel());
+            SelectedTab = (BaseTab)Tab.FirstOrDefault();
         }
-
-        public ObservableCollection<object> Children => _children;
     }
 }
