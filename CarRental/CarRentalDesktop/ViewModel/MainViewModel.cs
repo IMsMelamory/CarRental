@@ -16,7 +16,6 @@ namespace CarRentalDesktop.ViewModel
             Tab.Add(new CarsViewModel());
             Tab.Add(new ClientsViewModel());
             Tab.Add(new ManagersViewModel());
-            SelectedTab = (BaseTab)Tab.FirstOrDefault();
         }
     }
 }

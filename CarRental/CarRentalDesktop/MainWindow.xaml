@@ -29,6 +29,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <GridSplitter Grid.Column="0" Width="3" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -88,6 +89,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <GridSplitter Grid.Column="0" Width="3" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -146,6 +148,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                <GridSplitter Grid.Column="0" Width="3" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -184,7 +187,7 @@
         </DataTemplate>
     </Window.Resources>
     <TabControl ItemsSource="{Binding Tab}" 
-                SelectedItem="{Binding SelectedTab}">
+                SelectedIndex="0">
         <TabControl.ItemTemplate>
             <DataTemplate>
                 <TextBlock Text="{Binding Header}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
