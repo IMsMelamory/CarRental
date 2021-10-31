@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -9,106 +10,45 @@ using System.Threading.Tasks;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class ObservableCollectionEx<TValue> : ObservableCollection<TValue>
+    public class TrulyObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
     {
-
-        public ObservableCollectionEx() : base() { }
-        public ObservableCollectionEx(IEnumerable<TValue> values)
-           : base(values)
+        public TrulyObservableCollection()
+            : base()
         {
-            this.EnsureEventWiring();
+            CollectionChanged += new NotifyCollectionChangedEventHandler(TrulyObservableCollection_CollectionChanged);
         }
-        public ObservableCollectionEx(List<TValue> list)
-           : base(list)
+        public TrulyObservableCollection(List<T> list)
+            : base(list)
         {
-            this.EnsureEventWiring();
-        }
-
-        public event EventHandler<ItemChangedEventArgs> ItemChanged;
-
-        protected override void InsertItem(int index, TValue item)
-        {
-            base.InsertItem(index, item);
-
-            var npc = item as INotifyPropertyChanged;
-            if (npc != null)
-                npc.PropertyChanged += this.HandleItemPropertyChanged;
-        }
-
-        protected override void RemoveItem(int index)
-        {
-            var item = this[index];
-
-            base.RemoveItem(index);
-
-            var npc = item as INotifyPropertyChanged;
-            if (npc != null)
-                npc.PropertyChanged -= this.HandleItemPropertyChanged;
-        }
-
-        protected override void SetItem(int index, TValue item)
-        {
-            var oldItem = this[index];
-
-            base.SetItem(index, item);
-
-            var npcOld = item as INotifyPropertyChanged;
-            if (npcOld != null)
-                npcOld.PropertyChanged -= this.HandleItemPropertyChanged;
-
-            var npcNew = item as INotifyPropertyChanged;
-            if (npcNew != null)
-                npcNew.PropertyChanged += this.HandleItemPropertyChanged;
-        }
-
-        protected override void ClearItems()
-        {
-            var items = this.Items.ToList();
-
-            base.ClearItems();
-
-            foreach (var npc in items.OfType<INotifyPropertyChanged>().Cast<INotifyPropertyChanged>())
-                npc.PropertyChanged -= this.HandleItemPropertyChanged;
-        }
-
-
-        private void HandleItemPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            if (typeof(TValue).IsAssignableFrom(sender.GetType()))
+            foreach (var item in list)
             {
-                var item = (TValue)sender;
-                var pos = this.IndexOf(item);
-                this.OnItemChanged(item, pos, args.PropertyName);
+                item.PropertyChanged += new PropertyChangedEventHandler(item_PropertyChanged);
+            }
+            CollectionChanged += new NotifyCollectionChangedEventHandler(TrulyObservableCollection_CollectionChanged);
+        }
+
+        void TrulyObservableCollection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (Object item in e.NewItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged += new PropertyChangedEventHandler(item_PropertyChanged);
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (Object item in e.OldItems)
+                {
+                    (item as INotifyPropertyChanged).PropertyChanged -= new PropertyChangedEventHandler(item_PropertyChanged);
+                }
             }
         }
 
-        protected virtual void OnItemChanged(TValue item, int index, string propertyName)
+        void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (this.ItemChanged != null)
-                this.ItemChanged(this, new ItemChangedEventArgs(item, index, propertyName));
-        }
-
-        private void EnsureEventWiring()
-        {
-            foreach (var npc in this.Items.OfType<INotifyPropertyChanged>().Cast<INotifyPropertyChanged>())
-            {
-                npc.PropertyChanged -= this.HandleItemPropertyChanged;
-                npc.PropertyChanged += this.HandleItemPropertyChanged;
-            }
-        }
-
-        public class ItemChangedEventArgs : EventArgs
-        {
-            public ItemChangedEventArgs(TValue item, int index, string propertyName)
-            {
-                this.Item = item;
-                this.Index = index;
-                this.PropertyName = propertyName;
-            }
-
-            public int Index { get; private set; }
-            public TValue Item { get; private set; }
-            public string PropertyName { get; private set; }
+            NotifyCollectionChangedEventArgs a = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+            OnCollectionChanged(a);
         }
     }
 }

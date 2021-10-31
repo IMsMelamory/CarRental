@@ -10,6 +10,7 @@ namespace CarRentalCore.Repositories
         public ClientsRepository(BaseDataProvider<Client> jsonProvider) : base(jsonProvider)
         {
         }
+
         public int FindMaxIDClient()
         {
             UpdateDataIfNotExist();

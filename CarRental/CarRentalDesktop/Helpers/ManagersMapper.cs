@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using CarRentalCore.Model;
-using CarRentalDesktop.Annotations;
 
 namespace CarRentalDesktop.ViewModel
 {
@@ -21,7 +18,7 @@ namespace CarRentalDesktop.ViewModel
         }
         public Manager ToManager(ManagerViewModel vmManager)
         {
-            return  new Manager()
+            return new Manager()
             {
                 Name = vmManager.Name,
                 LastName = vmManager.LastName,

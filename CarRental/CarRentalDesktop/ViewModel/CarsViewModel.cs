@@ -2,13 +2,15 @@
 using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
 using CarRentalDesktop.Helpers;
+using System.Collections.ObjectModel;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class CarsViewModel: CarViewModel
+    public class CarsViewModel: BaseViewModel
     {
         
         private CarViewModel _selectedCar;
+        private ObservableCollection<CarViewModel> _list = new ObservableCollection<CarViewModel>();
         private string _buttonContent;
         public string ButtonContent
         {
@@ -75,10 +77,16 @@ namespace CarRentalDesktop.ViewModel
             Remove = new RelayCommand(RemoveCar, IsEnable);
             Clear = new RelayCommand(ClearCar, IsEnable);
             CarRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
-            Cars = new ObservableCollectionEx<CarViewModel>(CarVM.ToViewModel(CarRepository.GetAll()));
-
+            Cars = new ObservableCollection<CarViewModel>(CarVM.ToViewModel(CarRepository.GetAll()));
         }
-       public ObservableCollectionEx<CarViewModel> Cars { get; set; }
+        
+        
+        public ObservableCollection<CarViewModel> Cars 
+        {
+            get => _list;
+
+            set { _list = value; OnPropertyChanged(); }
+         }
        public CarsRepository CarRepository { get; set; }
        public CarsMapper CarVM { get; set; } = new CarsMapper();
 
@@ -124,10 +132,7 @@ namespace CarRentalDesktop.ViewModel
                 CarRepository.Remove(CarVM.ToCar(SelectedCar));
                 Cars.Remove(SelectedCar);
                 ClearFields();
-            }
-
-            
-            
+            }   
         }       
         private void ClearCar(object arg)
         {

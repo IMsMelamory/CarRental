@@ -7,7 +7,7 @@ using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    class ClientsViewModel: ClientViewModel
+    public class ClientsViewModel: BaseViewModel
     {
         private string _name;
         private string _lastName;
@@ -88,9 +88,16 @@ namespace CarRentalDesktop.ViewModel
             Remove = new RelayCommand(RemoveClient, IsEnable);
             //Clear = new RelayCommand(ClearClient, IsEnable);
             ClientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
-            Clients= new ObservableCollection<ClientViewModel>(ClientMap.ToViewModel(ClientsRepository.GetAll()));
+            Clients = new ObservableCollection<ClientViewModel>(ClientMap.ToViewModel(ClientsRepository.GetAll()));
         }
-        public ObservableCollection<ClientViewModel> Clients{ get; set; }
+        private ObservableCollection<ClientViewModel> _clients;
+        public ObservableCollection<ClientViewModel> Clients
+        {
+            get => _clients;
+
+            set{_clients = value; 
+                OnPropertyChanged(); }
+        }
         public ClientsRepository ClientsRepository { get; set; }
         public ClientsMapper ClientMap { get; set; } = new ClientsMapper();
         
@@ -111,6 +118,7 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
+        public CarsViewModel S { get; set; }
         public RelayCommand AddNew { get; set; }
         public RelayCommand Remove { get; set; }
         public RelayCommand Clear { get; set; }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace CarRentalDesktop.ViewModel
 {
@@ -12,10 +9,13 @@ namespace CarRentalDesktop.ViewModel
        
         public MainViewModel()
         {
-            Tab = new ObservableCollection<object>();
-            Tab.Add(new CarsViewModel());
-            Tab.Add(new ClientsViewModel());
-            Tab.Add(new ManagersViewModel());
+            Tab = new ObservableCollection<object>
+            {
+                new CarsViewModel(),
+                new ClientsViewModel(),
+                new ManagersViewModel(),
+                new RentsViewModel(new ClientsViewModel(), new CarsViewModel())
+            };
         }
     }
 }

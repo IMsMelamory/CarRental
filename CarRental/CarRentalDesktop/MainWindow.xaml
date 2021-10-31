@@ -9,26 +9,23 @@
         Title="CarRentalClient">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:CarsViewModel}">
-            <Grid>
+            <Grid >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ListBox Grid.Column="0" 
-                 ItemsSource="{Binding Path =Cars}"
-                 SelectedItem="{Binding SelectedCar}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = Number }" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = Model  }" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = Color }" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = DateRelease}" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = DayPrice }" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <DataGrid Grid.Column="0" 
+                              ItemsSource="{Binding Path =Cars}"
+                              SelectedItem="{Binding SelectedCar}"  
+                              AutoGenerateColumns="False" >
+                    <DataGrid.Columns >
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = Number,  UpdateSourceTrigger=PropertyChanged}" Header="Номер"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = Model}" Header="Модель"/>
+                        <DataGridTextColumn   IsReadOnly="True" Binding="{Binding Path = Color }" Header="Цвет"/>
+                        <DataGridTextColumn   IsReadOnly="True" Binding="{Binding Path = DateRelease}" Header="Год выпуска"/>
+                        <DataGridTextColumn   IsReadOnly="True" Binding="{Binding Path = DayPrice }" Header="Цена\сутки"/>
+                    </DataGrid.Columns>
+                </DataGrid>
                 <GridSplitter Grid.Column="0" Width="3" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
@@ -74,21 +71,18 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ListBox Grid.Column="0" 
-                 ItemsSource="{Binding Path =Clients}"
-                 SelectedItem="{Binding Path =SelectedClient}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = Name}" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = LastName  }" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = SecondLastName }" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = BDay}" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = NumberDriversLicence}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <DataGrid Grid.Column="0" 
+                          ItemsSource="{Binding Path =Clients}"
+                          SelectedItem="{Binding Path =SelectedClient}"  
+                          AutoGenerateColumns="False" >
+                    <DataGrid.Columns >
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Header="Имя"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" Header="Фамилия"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" Header="Отчество"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" Header="Дата рождения"/>
+                        <DataGridTextColumn IsReadOnly="True"  Binding="{Binding Path = NumberDriversLicence }" Header="Номер водительского удостоверения"/>
+                    </DataGrid.Columns>
+                </DataGrid>
                 <GridSplitter Grid.Column="0" Width="3" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
@@ -134,21 +128,15 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ListBox Grid.Column="0" 
-                 ItemsSource="{Binding Path = Managers}"
-                 SelectedItem="{Binding Path = SelectedManager, Mode = TwoWay}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = Name}" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = LastName  }" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = SecondLastName }" />
-                                <TextBlock Padding="0,0,2,0" Text="{Binding Path = BDay}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <GridSplitter Grid.Column="0" Width="3" />
+                <DataGrid Grid.Column="0"  ItemsSource="{Binding Path = Managers}" SelectedItem="{Binding Path=SelectedManager}"  AutoGenerateColumns="False" >
+                    <DataGrid.Columns >
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Header="Имя"/>
+                        <DataGridTextColumn  Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" Header="Фамилия"/>
+                        <DataGridTextColumn  Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" Header="Отчество"/>
+                        <DataGridTextColumn  Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" Header="Дата рождения"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                        <GridSplitter Grid.Column="0" Width="3" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -162,13 +150,14 @@
                         <StackPanel Orientation="Vertical" 
                             Margin="5">
                             <TextBlock Text="Имя" />
-                            <TextBox  MaxLength="20" Text="{Binding Path= Name, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            <TextBox  MaxLength="20" Text="{Binding Path= Name, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" />
                             <TextBlock Text="Фамилия" />
-                            <TextBox MaxLength="20" Text="{Binding LastName,  UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBox MaxLength="20" Text="{Binding LastName,  UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
                             <TextBlock Text="Отчество" />
-                            <TextBox MaxLength="20" Text="{Binding SecondLastName,  UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBox MaxLength="20" Text="{Binding SecondLastName,  UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
                             <TextBlock Text="Дата рождения" />
-                            <TextBox MaxLength="20" Text="{Binding BDay,  UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBox MaxLength="20" Text="{Binding BDay,  UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            
                         </StackPanel>
                     </Grid>
                     <Button Grid.Row="1"
@@ -185,12 +174,84 @@
                 </Grid>
             </Grid>
         </DataTemplate>
+        <DataTemplate  DataType="{x:Type viewModel:RentsViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <DataGrid Grid.Column="0"  ItemsSource="{Binding Rents}" 
+                                           SelectedItem="{Binding SelectedRent}"  
+                                           AutoGenerateColumns="False" >
+                    <DataGrid.Columns >
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = ClientNumberLicense, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Header="Номер водительского удостоверения"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = CarNumber, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Header="Номер машины"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = StartRent, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Header="Дата начала аренды"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = EndRent, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" Header="Дата окончания аренды"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = DayRentCount, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" Header="Количество дней аренды"/>
+                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = Fine, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" Header="Пеня"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <GridSplitter Grid.Column="0" Width="3" />
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0" ColumnSpan="2" >
+                        <StackPanel Orientation="Vertical" 
+                            Margin="5">
+                            <TextBlock Text="Номер водительского удостоверения" />
+                            <ComboBox ItemsSource="{Binding ClientsVM.Clients, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedValuePath="NumberDriversLicence"
+                                      SelectedValue="{Binding ClientNumberLicense, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMemberPath="NumberDriversLicence"/>
+                            <TextBlock Text="Номер машины" />
+                            <ComboBox ItemsSource="{Binding CarsVM.Cars, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedValuePath="Number"
+                                      SelectedValue="{Binding CarNumber, UpdateSourceTrigger=PropertyChanged}"
+                                      DisplayMemberPath="Number"/>
+                            <TextBlock Text="Дата начала аренды" />
+                            <TextBox  MaxLength="20" 
+                                      Text="{Binding StartRent, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Дата окончания аренды" />
+                            <TextBox MaxLength="20" 
+                                     Text="{Binding EndRent,  UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Количество дней аренды" />
+                            <TextBox MaxLength="20" 
+                                     Text="{Binding DayRentCount,  UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Пеня" />
+                            <TextBox MaxLength="20" 
+                                     IsReadOnly="True" 
+                                     Text="{Binding Fine,  UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Grid>
+                    <Button Grid.Row="1"
+                            Grid.Column="0"  
+                            Height="30"
+                            Command="{Binding Path=AddNew}"
+                            Content="{Binding Path=ButtonContent}"  />
+                    <Button Grid.Row="1" 
+                            Grid.Column="1" 
+                            Height="30"
+                            Command="{Binding Path=Remove}" 
+                            CommandParameter="{Binding SelectedRent}" 
+                            Content="Remove"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
     </Window.Resources>
     <TabControl ItemsSource="{Binding Tab}" 
                 SelectedIndex="0">
         <TabControl.ItemTemplate>
             <DataTemplate>
-                <TextBlock Text="{Binding Header}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Header}" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"/>
             </DataTemplate>
         </TabControl.ItemTemplate>
     </TabControl>

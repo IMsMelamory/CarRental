@@ -11,7 +11,7 @@ using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class ManagersViewModel: ManagerViewModel
+    public class ManagersViewModel: BaseViewModel
     {
         private string _name;
         private string _lastName;
@@ -70,10 +70,10 @@ namespace CarRentalDesktop.ViewModel
             Remove = new RelayCommand(RemoveManager, IsEnable);
             //Clear = new RelayCommand(ClearClient, IsEnable);
             ManagersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
-            Managers = new ObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()));
+            Managers = new TrulyObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()));
         }
 
-        public ObservableCollection<ManagerViewModel> Managers{ get; set; }
+        public TrulyObservableCollection<ManagerViewModel> Managers{ get; set; }
         public ManagersRepository ManagersRepository { get; set; }
         public ManagersMapper ManagerMap { get; set; } = new ManagersMapper();
 
@@ -88,7 +88,7 @@ namespace CarRentalDesktop.ViewModel
                     Name = value.Name;
                     LastName = value.LastName;
                     SecondLastName = value.SecondLastName;
-                    BDay = BDay;
+                    BDay = value.BDay.ToString();
                 }
                 OnPropertyChanged();
             }
