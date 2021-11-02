@@ -12,9 +12,9 @@ namespace CarRentalDesktop.ViewModel
             Tab = new ObservableCollection<object>
             {
                 new CarsViewModel(),
-                new ClientsViewModel(),
+                new ClientsViewModel( new ManagersViewModel()),
                 new ManagersViewModel(),
-                new RentsViewModel(new ClientsViewModel(), new CarsViewModel())
+                new RentsViewModel(new ClientsViewModel(new ManagersViewModel()), new CarsViewModel())
             };
         }
     }

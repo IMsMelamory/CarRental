@@ -17,18 +17,20 @@ namespace CarRentalDesktop.ViewModel
               Model = x.Model,
               Color = x.Color,
               DateRelease = x.DateRelease,
-              DayPrice = x.DayPrice
+              DayPrice = x.DayPrice,
+              ID = x.ID
           }).ToList();
         }
         public Car ToCar(CarViewModel vmCar)
         {
-            return  new Car()
+            return new Car()
             {
                 Number = vmCar.Number,
                 Model = vmCar.Model,
                 Color = vmCar.Color,
                 DateRelease = vmCar.DateRelease,
-                DayPrice = vmCar.DayPrice
+                DayPrice = vmCar.DayPrice,
+                ID = vmCar.ID
             };
         }
     }

@@ -17,7 +17,9 @@ namespace CarRentalDesktop.ViewModel
              LastName = x.LastName,
              SecondLastName = x.SecondLastName,
              BDay = x.BDay,
-             NumberDriversLicence = x.NumberDriversLicence
+             NumberDriversLicence = x.NumberDriversLicence,
+             ManagerID = x.ManagerID,
+             ID = x.ID
           }).ToList();
         }
         public Client ToClient(ClientViewModel vmClient)
@@ -28,7 +30,9 @@ namespace CarRentalDesktop.ViewModel
                 LastName = vmClient.LastName,
                 SecondLastName = vmClient.SecondLastName,
                 BDay = vmClient.BDay,
-                NumberDriversLicence = vmClient.NumberDriversLicence
+                NumberDriversLicence = vmClient.NumberDriversLicence,
+                ManagerID = vmClient.ManagerID,
+                ID = vmClient.ID
             };
         }
     }

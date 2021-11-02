@@ -47,14 +47,14 @@ namespace CarRentalCore.Repositories
             this.FindRentCar(clientDriverLicense, carNumber).EndRent = endRent;
             ForceUpdate();
         }
-        public void ChekIsFine(string clientDriverLicense, string carNumber)
+        public void ChekIsFine(string clientDriverLicense, string carNumber, DateTime endRent)
         {
             UpdateDataIfNotExist();
-            var findCar = this.FindRentCar(clientDriverLicense, carNumber);
+            var findCar = _entities.FirstOrDefault(x => (x.ClientNumberLicense == clientDriverLicense) && (x.CarNumber == carNumber) && (x.EndRent == endRent));
             {
-                if ((findCar.EndRent - findCar.StartRent).TotalDays > findCar.DayRentCount)
+                if ((findCar.EndRent - findCar.StartRent).Days > findCar.DayRentCount)
                 {
-                    findCar.Fine = (((findCar.EndRent - findCar.StartRent).TotalDays) - findCar.DayRentCount) * 5;
+                    findCar.Fine = ((findCar.EndRent - findCar.StartRent).Days - findCar.DayRentCount) * 5;
                 }
             }
             ForceUpdate();

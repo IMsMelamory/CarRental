@@ -12,6 +12,15 @@ namespace CarRentalDesktop.ViewModel
         private string _lastName;
         private string _secondLastName;
         private DateTime _bDay;
+        private int _id;
+        public int ID
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+            }
+        }
         public string Name
         {
             get => _name;

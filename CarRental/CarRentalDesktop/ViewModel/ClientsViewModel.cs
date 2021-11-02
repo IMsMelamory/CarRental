@@ -16,7 +16,6 @@ namespace CarRentalDesktop.ViewModel
         private string _numberDriversLicence;
         private int _managerID;
         private ClientViewModel _selectedClient;
-        private string _buttonContentClient;
         public string Name
         {
             get => _name;
@@ -71,21 +70,13 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-       
-        public string ButtonContentClient
+        public ManagersViewModel ManagerVM { get; set; }
+        public ClientsViewModel(ManagersViewModel managerVM)
         {
-            get => _buttonContentClient;
-            set
-            {
-                _buttonContentClient = value;
-                OnPropertyChanged();
-            }
-     
-        }
-        public ClientsViewModel()
-        {
-            AddNew = new RelayCommand(AddNewClient, IsSelected);
+            ManagerVM = managerVM;
+            AddNew = new RelayCommand(AddNewClient);
             Remove = new RelayCommand(RemoveClient, IsEnable);
+            Save = new RelayCommand(SaveClient, IsEnable);
             //Clear = new RelayCommand(ClearClient, IsEnable);
             ClientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
             Clients = new ObservableCollection<ClientViewModel>(ClientMap.ToViewModel(ClientsRepository.GetAll()));
@@ -100,7 +91,8 @@ namespace CarRentalDesktop.ViewModel
         }
         public ClientsRepository ClientsRepository { get; set; }
         public ClientsMapper ClientMap { get; set; } = new ClientsMapper();
-        
+
+
         public ClientViewModel SelectedClient
         {
             get => _selectedClient;
@@ -114,6 +106,7 @@ namespace CarRentalDesktop.ViewModel
                     SecondLastName = value.SecondLastName;
                     BDay = value.BDay.ToString();
                     NumberDriversLicence = value.NumberDriversLicence;
+                    ManagerID = value.ManagerID;
                 }
                 OnPropertyChanged();
             }
@@ -122,9 +115,19 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand AddNew { get; set; }
         public RelayCommand Remove { get; set; }
         public RelayCommand Clear { get; set; }
+        public RelayCommand Save { get; set; }
         private void AddNewClient(object arg)
         {
-            var client = new ClientViewModel() { Name = Name, LastName = LastName, SecondLastName  = SecondLastName, BDay = DateTime.Parse(BDay), NumberDriversLicence = NumberDriversLicence, ManagerID = 0 };
+            var client = new ClientViewModel()
+            {
+                Name = Name,
+                LastName = LastName, 
+                SecondLastName  = SecondLastName,
+                BDay = DateTime.Parse(BDay),
+                NumberDriversLicence = NumberDriversLicence,
+                ID = ClientsRepository.FindMaxIDClient() + 1,
+                ManagerID = ManagerID
+            };
             Clients.Add(client);
             ClearFields();
             ClientsRepository.Add(ClientMap.ToClient(client));
@@ -138,6 +141,7 @@ namespace CarRentalDesktop.ViewModel
             SecondLastName = string.Empty;
             BDay = string.Empty;
             NumberDriversLicence = string.Empty;
+            ManagerID = 0;
         }
 
         private void RemoveClient(object arg)
@@ -150,22 +154,36 @@ namespace CarRentalDesktop.ViewModel
             }
 
         }
-
-       /* private void ClearClient(object arg)
+        private void SaveClient(object arg)
         {
             if (SelectedClient != null)
             {
+                var myClient = ClientsRepository.FindByID(SelectedClient.ID);
+                myClient.Name = Name;
+                myClient.LastName = LastName;
+                myClient.SecondLastName = SecondLastName;
+                myClient.NumberDriversLicence = NumberDriversLicence;
+                myClient.ManagerID = ManagerID;
+                ClientsRepository.ForceUpdate();
+                SelectedClient.Name = Name;
+                SelectedClient.LastName = LastName;
+                SelectedClient.SecondLastName = SecondLastName;
+                SelectedClient.NumberDriversLicence = NumberDriversLicence;
+                SelectedClient.ManagerID = ManagerID;
                 ClearFields();
             }
-        }*/
+        }
+
+        /* private void ClearClient(object arg)
+         {
+             if (SelectedClient != null)
+             {
+                 ClearFields();
+             }
+         }*/
         private bool IsEnable(object value)
         {
             return SelectedClient != null;
-        }
-        private bool IsSelected(object value)
-        {
-            ButtonContentClient = SelectedClient != null ? "Edit" : "Add";
-            return true;
         }
         public override string Header => "Clients";
     }

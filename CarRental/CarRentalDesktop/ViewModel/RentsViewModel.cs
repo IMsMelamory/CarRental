@@ -87,8 +87,9 @@ namespace CarRentalDesktop.ViewModel
         {
             ClientsVM = clientsVM;
             CarsVM = carsVM;
-            AddNew = new RelayCommand(AddNewRent, IsSelected);
-            Remove = new RelayCommand(RemoveRent, IsEnable);
+            AddNew = new RelayCommand(AddNewRent);
+            Remove = new RelayCommand(RemoveRent);
+            Return = new RelayCommand(ReturnRent);
             RentsRepository = new RentsRepository(new JsonProvider<Rent>("rents.json"));
             Rents = new ObservableCollection<RentViewModel>(RentMap.ToViewModel(RentsRepository.GetAll()));
 
@@ -99,14 +100,25 @@ namespace CarRentalDesktop.ViewModel
 
         public RelayCommand AddNew { get; set; }
         public RelayCommand Remove { get; set; }
-        public RelayCommand Clear { get; set; }
+        public RelayCommand Return { get; set; }
         private void AddNewRent(object arg)
         {
             var rent = new RentViewModel() { ClientNumberLicense = ClientNumberLicense, CarNumber = CarNumber, StartRent = DateTime.Parse(StartRent), EndRent = DateTime.MinValue, Fine = 0, DayRentCount = DayRentCount };
             Rents.Add(rent);
             ClearFields();
             RentsRepository.Add(RentMap.ToRent(rent));
-
+        }
+        private void ReturnRent(object arg)
+        {
+            if (SelectedRent != null)
+            {
+                var selectRent = RentMap.ToRent(SelectedRent);
+                RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, DateTime.Parse(EndRent));
+                RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, DateTime.Parse(EndRent));
+                SelectedRent.EndRent = DateTime.Parse(EndRent);
+                ChekFine(SelectedRent);
+            }
+            ClearFields();
         }
         public RentViewModel SelectedRent
         {
@@ -163,6 +175,13 @@ namespace CarRentalDesktop.ViewModel
         {
             ButtonContent = SelectedRent != null ? "Edit" : "Add";
             return true;
+        }
+        private void ChekFine(RentViewModel car)
+        {
+            if ((car.EndRent - car.StartRent).Days > car.DayRentCount)
+            {
+                car.Fine = ((car.EndRent - car.StartRent).Days - car.DayRentCount) * 5;
+            }
         }
         public override string Header => "Rents";
     }

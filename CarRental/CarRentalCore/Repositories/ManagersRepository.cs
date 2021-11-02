@@ -13,14 +13,7 @@ namespace CarRentalCore.Repositories
         {
             UpdateDataIfNotExist();
             var id = _entities.Select(x => x.ID);
-            if (id.Any())
-            {
-                return id.Max();
-            }
-            else
-            {
-                return 0;
-            }
+            return id.Any() ? id.Max() : 0;
         }
 
         public void RemoveByLastNameManager(string lastName)
@@ -36,6 +29,11 @@ namespace CarRentalCore.Repositories
         {
             UpdateDataIfNotExist();
             return _entities.FirstOrDefault(x => x.LastName == lastName);
+        }
+        public Manager FindByID(int ID)
+        {
+            UpdateDataIfNotExist();
+            return _entities.FirstOrDefault(x => x.ID == ID);
         }
     }
 }

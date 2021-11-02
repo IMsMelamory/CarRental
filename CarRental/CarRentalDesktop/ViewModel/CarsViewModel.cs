@@ -11,16 +11,6 @@ namespace CarRentalDesktop.ViewModel
         
         private CarViewModel _selectedCar;
         private ObservableCollection<CarViewModel> _list = new ObservableCollection<CarViewModel>();
-        private string _buttonContent;
-        public string ButtonContent
-        {
-            get => _buttonContent;
-            set
-            {
-                _buttonContent = value;
-                OnPropertyChanged();
-            }
-        }
         private string _number;
         private string _model;
         private string _color;
@@ -73,20 +63,19 @@ namespace CarRentalDesktop.ViewModel
         }
         public CarsViewModel()
         {
-            AddNew = new RelayCommand(AddNewCar, IsSelected);
+            AddNew = new RelayCommand(AddNewCar);
             Remove = new RelayCommand(RemoveCar, IsEnable);
             Clear = new RelayCommand(ClearCar, IsEnable);
+            Save = new RelayCommand(SaveCar);
             CarRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
             Cars = new ObservableCollection<CarViewModel>(CarVM.ToViewModel(CarRepository.GetAll()));
         }
-        
-        
         public ObservableCollection<CarViewModel> Cars 
         {
             get => _list;
 
             set { _list = value; OnPropertyChanged(); }
-         }
+        }
        public CarsRepository CarRepository { get; set; }
        public CarsMapper CarVM { get; set; } = new CarsMapper();
 
@@ -108,9 +97,11 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand AddNew { get; set; }
         public RelayCommand Remove { get; set; }
         public RelayCommand Clear { get; set; }
+        public RelayCommand Save { get; set; }
         private void AddNewCar(object arg)
         {
-            var car = new CarViewModel() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice};
+
+            var car = new CarViewModel() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice, ID = CarRepository.FindMaxIDCar() + 1 };
             Cars.Add(car);
             ClearFields();
             CarRepository.Add(CarVM.ToCar(car));
@@ -133,7 +124,26 @@ namespace CarRentalDesktop.ViewModel
                 Cars.Remove(SelectedCar);
                 ClearFields();
             }   
-        }       
+        }
+        private void SaveCar(object arg)
+        {
+            if (SelectedCar != null)
+            {
+                var myCar = CarRepository.FindByID(SelectedCar.ID);
+                myCar.Number = Number;
+                myCar.Model = Model;
+                myCar.Color = Color;
+                myCar.DayPrice = DayPrice;
+                myCar.DateRelease = DateRelease;
+                CarRepository.ForceUpdate();
+                SelectedCar.Number = Number;
+                SelectedCar.Model = Model;
+                SelectedCar.Color = Color;
+                SelectedCar.DayPrice = DayPrice;
+                SelectedCar.DateRelease = DateRelease;
+                ClearFields();
+            }
+        }
         private void ClearCar(object arg)
         {
             if (SelectedCar != null)
@@ -144,19 +154,6 @@ namespace CarRentalDesktop.ViewModel
         private bool IsEnable (object value)
         {
             return SelectedCar != null;
-        }
-        private bool IsSelected(object value)
-        {
-            if (SelectedCar != null)
-            {
-                ButtonContent = "Edit";
-            }
-            else
-            {
-                ButtonContent = "Add";
-            }
-            return true;
-            
         }
         public override string Header => "Cars";
     }

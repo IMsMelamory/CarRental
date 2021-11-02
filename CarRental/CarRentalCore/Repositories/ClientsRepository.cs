@@ -15,14 +15,7 @@ namespace CarRentalCore.Repositories
         {
             UpdateDataIfNotExist();
             var id = _entities.Select(x => x.ID);
-            if (id.Any())
-            {
-                return id.Max();
-            }
-            else
-            {
-                return 0;
-            }
+            return id.Any() ? id.Max() : 0;
         }
 
 
@@ -54,6 +47,11 @@ namespace CarRentalCore.Repositories
             {
                 RemoveById(idToRemove.Value);
             }
+        }
+        public Client FindByID(int ID)
+        {
+            UpdateDataIfNotExist();
+            return _entities.FirstOrDefault(x => x.ID == ID);
         }
     }
 }

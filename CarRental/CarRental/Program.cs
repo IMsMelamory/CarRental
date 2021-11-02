@@ -387,7 +387,7 @@ namespace CarRental
                                     if (rentRepository.ChekDateEndRent(clientDriverLicense, carNumber, endRentDate))
                                     {
                                         rentRepository.UpdateDateEnd(clientDriverLicense, carNumber, endRentDate);
-                                        rentRepository.ChekIsFine(clientDriverLicense, carNumber);
+                                        rentRepository.ChekIsFine(clientDriverLicense, carNumber, endRentDate);
                                         
                                     }
                                     else

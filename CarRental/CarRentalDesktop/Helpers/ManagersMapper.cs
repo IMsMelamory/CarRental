@@ -14,6 +14,7 @@ namespace CarRentalDesktop.ViewModel
              LastName = x.LastName,
              SecondLastName = x.SecondLastName,
              BDay = x.BDay,
+             ID = x.ID,
           }).ToList();
         }
         public Manager ToManager(ManagerViewModel vmManager)
@@ -24,6 +25,7 @@ namespace CarRentalDesktop.ViewModel
                 LastName = vmManager.LastName,
                 SecondLastName = vmManager.SecondLastName,
                 BDay = vmManager.BDay,
+                ID = vmManager.ID
             };
         }
     }
