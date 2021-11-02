@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using CarRentalCore.Model;
 using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
@@ -23,9 +24,12 @@ namespace CarRentalDesktop.ViewModel
         private string _clientNumderLicense;
         private string _carNmber;
         private string _startRent;
+        private DateTime _dayStart;
         private string _endRent;
+        private DateTime _dayEnd;
         private int _dayRentCount;
         private double _fine;
+
 
         public string ClientNumberLicense
         {
@@ -50,7 +54,14 @@ namespace CarRentalDesktop.ViewModel
             get => _startRent;
             set
             {
-                _startRent = value;
+                if (DateTime.TryParse(value, out _dayStart) == false)
+                {
+                    MessageBox.Show("Введите полную дату рождения");
+                }
+                else
+                {
+                    _startRent = value;
+                }
                 OnPropertyChanged();
             }
         }
@@ -59,7 +70,14 @@ namespace CarRentalDesktop.ViewModel
             get => _endRent;
             set
             {
-                _endRent = value;
+                if (DateTime.TryParse(value, out _dayEnd) == false)
+                {
+                    MessageBox.Show("Введите полную дату рождения");
+                }
+                else
+                {
+                    _endRent = value;
+                }
                 OnPropertyChanged();
             }
         }
@@ -103,7 +121,15 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand Return { get; set; }
         private void AddNewRent(object arg)
         {
-            var rent = new RentViewModel() { ClientNumberLicense = ClientNumberLicense, CarNumber = CarNumber, StartRent = DateTime.Parse(StartRent), EndRent = DateTime.MinValue, Fine = 0, DayRentCount = DayRentCount };
+            var rent = new RentViewModel() 
+            { 
+                ClientNumberLicense = ClientNumberLicense, 
+                CarNumber = CarNumber, 
+                StartRent = _dayStart, 
+                EndRent = DateTime.MinValue, 
+                Fine = 0, 
+                DayRentCount = DayRentCount 
+            };
             Rents.Add(rent);
             ClearFields();
             RentsRepository.Add(RentMap.ToRent(rent));
@@ -113,9 +139,9 @@ namespace CarRentalDesktop.ViewModel
             if (SelectedRent != null)
             {
                 var selectRent = RentMap.ToRent(SelectedRent);
-                RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, DateTime.Parse(EndRent));
-                RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, DateTime.Parse(EndRent));
-                SelectedRent.EndRent = DateTime.Parse(EndRent);
+                RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, _dayStart);
+                RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, _dayEnd);
+                SelectedRent.EndRent = _dayEnd;
                 ChekFine(SelectedRent);
             }
             ClearFields();
@@ -170,11 +196,6 @@ namespace CarRentalDesktop.ViewModel
         private bool IsEnable(object value)
         {
             return SelectedRent != null;
-        }
-        private bool IsSelected(object value)
-        {
-            ButtonContent = SelectedRent != null ? "Edit" : "Add";
-            return true;
         }
         private void ChekFine(RentViewModel car)
         {

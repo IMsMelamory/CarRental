@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using CarRentalCore.Model;
 using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
@@ -11,12 +8,13 @@ using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class ManagersViewModel: BaseViewModel
+    public class ManagersViewModel : BaseViewModel
     {
         private string _name;
         private string _lastName;
         private string _secondLastName;
         private string _bDay;
+        private DateTime _day;
         public string Name
         {
             get => _name;
@@ -49,7 +47,14 @@ namespace CarRentalDesktop.ViewModel
             get => _bDay;
             set
             {
-                _bDay = value;
+                if (DateTime.TryParse(value, out _day) == false)
+                {
+                    MessageBox.Show("Введите полную дату рождения");
+                }
+                else
+                {
+                    _bDay = value;
+                }
                 OnPropertyChanged();
             }
         }
@@ -65,7 +70,7 @@ namespace CarRentalDesktop.ViewModel
             Managers = new ObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()));
         }
 
-        public ObservableCollection<ManagerViewModel> Managers{ get; set; }
+        public ObservableCollection<ManagerViewModel> Managers { get; set; }
         public ManagersRepository ManagersRepository { get; set; }
         public ManagersMapper ManagerMap { get; set; } = new ManagersMapper();
 
@@ -96,7 +101,7 @@ namespace CarRentalDesktop.ViewModel
                 Name = Name, 
                 LastName = LastName, 
                 SecondLastName = SecondLastName, 
-                BDay = DateTime.Parse(BDay), 
+                BDay = _day, 
                 ID = ManagersRepository.FindMaxIDManagers() + 1,
             };
             Managers.Add(manager);

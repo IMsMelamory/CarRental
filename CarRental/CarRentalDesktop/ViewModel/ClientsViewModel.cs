@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using CarRentalCore.Model;
 using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
@@ -13,6 +14,7 @@ namespace CarRentalDesktop.ViewModel
         private string _lastName;
         private string _secondLastName;
         private string _bDay;
+        private DateTime _day;
         private string _numberDriversLicence;
         private int _managerID;
         private ClientViewModel _selectedClient;
@@ -48,7 +50,14 @@ namespace CarRentalDesktop.ViewModel
             get => _bDay;
             set
             {
-                _bDay = value;
+                if (DateTime.TryParse(value, out _day) == false)
+                {
+                    MessageBox.Show("Введите полную дату рождения");
+                }
+                else
+                {
+                    _bDay = value;
+                }
                 OnPropertyChanged();
             }
         }
@@ -123,7 +132,7 @@ namespace CarRentalDesktop.ViewModel
                 Name = Name,
                 LastName = LastName, 
                 SecondLastName  = SecondLastName,
-                BDay = DateTime.Parse(BDay),
+                BDay = _day,
                 NumberDriversLicence = NumberDriversLicence,
                 ID = ClientsRepository.FindMaxIDClient() + 1,
                 ManagerID = ManagerID
