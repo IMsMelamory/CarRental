@@ -50,14 +50,7 @@ namespace CarRentalDesktop.ViewModel
             get => _bDay;
             set
             {
-                if (DateTime.TryParse(value, out _day) == false)
-                {
-                    MessageBox.Show("Введите полную дату рождения");
-                }
-                else
-                {
-                    _bDay = value;
-                }
+                _bDay = value;
                 OnPropertyChanged();
             }
         }
@@ -95,8 +88,10 @@ namespace CarRentalDesktop.ViewModel
         {
             get => _clients;
 
-            set{_clients = value; 
-                OnPropertyChanged(); }
+            set
+            {
+                _clients = value;
+                OnPropertyChanged();}
         }
         public ClientsRepository ClientsRepository { get; set; }
         public ClientsMapper ClientMap { get; set; } = new ClientsMapper();
@@ -127,19 +122,26 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand Save { get; set; }
         private void AddNewClient(object arg)
         {
-            var client = new ClientViewModel()
+            if (DateTime.TryParse(BDay, out _day) == false)
             {
-                Name = Name,
-                LastName = LastName, 
-                SecondLastName  = SecondLastName,
-                BDay = _day,
-                NumberDriversLicence = NumberDriversLicence,
-                ID = ClientsRepository.FindMaxIDClient() + 1,
-                ManagerID = ManagerID
-            };
-            Clients.Add(client);
-            ClearFields();
-            ClientsRepository.Add(ClientMap.ToClient(client));
+                MessageBox.Show("Введите полную дату рождения");
+            }
+            else
+            {
+                var client = new ClientViewModel()
+                {
+                    Name = Name,
+                    LastName = LastName,
+                    SecondLastName = SecondLastName,
+                    BDay = _day,
+                    NumberDriversLicence = NumberDriversLicence,
+                    ID = ClientsRepository.FindMaxIDClient() + 1,
+                    ManagerID = ManagerID
+                };
+                Clients.Add(client);
+                ClearFields();
+                ClientsRepository.Add(ClientMap.ToClient(client));
+            }
 
         }
 

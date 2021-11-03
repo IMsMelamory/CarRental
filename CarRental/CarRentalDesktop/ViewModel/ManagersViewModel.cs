@@ -47,14 +47,8 @@ namespace CarRentalDesktop.ViewModel
             get => _bDay;
             set
             {
-                if (DateTime.TryParse(value, out _day) == false)
-                {
-                    MessageBox.Show("Введите полную дату рождения");
-                }
-                else
-                {
+               
                     _bDay = value;
-                }
                 OnPropertyChanged();
             }
         }
@@ -65,7 +59,7 @@ namespace CarRentalDesktop.ViewModel
             AddNew = new RelayCommand(AddNewManager);
             Remove = new RelayCommand(RemoveManager, IsEnable);
             Save = new RelayCommand(SaveManager, IsEnable);
-            //Clear = new RelayCommand(ClearClient, IsEnable);
+            Clear = new RelayCommand(ClearManager);
             ManagersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
             Managers = new ObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()));
         }
@@ -96,17 +90,24 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand Save { get; set; }
         private void AddNewManager(object arg)
         {
-            var manager = new ManagerViewModel()
+            if (DateTime.TryParse(BDay, out _day) == false)
             {
-                Name = Name, 
-                LastName = LastName, 
-                SecondLastName = SecondLastName, 
-                BDay = _day, 
-                ID = ManagersRepository.FindMaxIDManagers() + 1,
-            };
-            Managers.Add(manager);
-            ClearFields();
-            ManagersRepository.Add(ManagerMap.ToManager(manager));
+                MessageBox.Show("Введите полную дату рождения");
+            }
+            else
+            {
+                var manager = new ManagerViewModel()
+                {
+                    Name = Name,
+                    LastName = LastName,
+                    SecondLastName = SecondLastName,
+                    BDay = _day,
+                    ID = ManagersRepository.FindMaxIDManagers() + 1,
+                };
+                Managers.Add(manager);
+                ClearFields();
+                ManagersRepository.Add(ManagerMap.ToManager(manager));
+            } 
         }
 
         private void ClearFields()
@@ -114,7 +115,7 @@ namespace CarRentalDesktop.ViewModel
             Name = string.Empty;
             LastName = string.Empty;
             SecondLastName = string.Empty;
-           // BDay = string.Empty;
+            BDay = string.Empty;
         }
 
         private void RemoveManager(object arg)
@@ -141,13 +142,13 @@ namespace CarRentalDesktop.ViewModel
                 ClearFields();
             }
         }
-        /* private void ClearClient(object arg)
+        private void ClearManager(object arg)
          {
-             if (SelectedClient != null)
-             {
-                 ClearFields();
-             }
-         }*/
+            if (SelectedManager != null)
+            {
+                ClearFields();
+            }
+         }
         private bool IsEnable(object value)
         {
             return SelectedManager != null;

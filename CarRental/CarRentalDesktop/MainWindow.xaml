@@ -147,10 +147,12 @@
                             <TextBlock Text="Номер водительского удостоверения" />
                             <TextBox MaxLength="20" 
                                      Text="{Binding NumberDriversLicence, UpdateSourceTrigger=PropertyChanged}" />
-                            <ComboBox ItemsSource="{Binding ManagerVM.Managers, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBlock Text="Фамилия менеджера" />
+                            <ComboBox ItemsSource="{Binding ManagerVM.Managers,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                       SelectedValuePath="ID"
                                       SelectedValue="{Binding ManagerID, UpdateSourceTrigger=PropertyChanged}"
-                                      DisplayMemberPath="Name"/>
+                                      DisplayMemberPath="Name"
+                                      Text="Please Select"/>
                         </StackPanel>
                     </Grid>
                     <Button Grid.Row="1"
@@ -206,8 +208,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Grid.Column="0" ColumnSpan="2" >
+                    <Grid Grid.Row="1" Grid.Column="0" ColumnSpan="2" >
                         <StackPanel Orientation="Vertical" 
                             Margin="5">
                             <TextBlock Text="Имя" />
@@ -225,18 +228,23 @@
                             
                         </StackPanel>
                     </Grid>
-                    <Button Grid.Row="1"
+                    <Button Grid.Row="0"
+                            Grid.Column="1"  
+                            Width="50"
+                            Command="{Binding Path=Clear}"
+                            Content="x"  />
+                    <Button Grid.Row="2"
                             Grid.Column="0"  
                             Height="30"
                             Command="{Binding Path=AddNew}"
                             Content="Добавить"  />
-                    <Button Grid.Row="1" 
+                    <Button Grid.Row="2" 
                             Grid.Column="1" 
                             Height="30"
                             Command="{Binding Path=Remove}" 
                             CommandParameter="Удалить" 
                             Content="Удалить"/>
-                    <Button Grid.Row="2" 
+                    <Button Grid.Row="3" 
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Height="30"
@@ -285,7 +293,7 @@
                                       SelectedValue="{Binding ClientNumberLicense, UpdateSourceTrigger=PropertyChanged}"
                                       DisplayMemberPath="NumberDriversLicence"/>
                             <TextBlock Text="Номер машины" />
-                            <ComboBox ItemsSource="{Binding CarsVM.Cars, UpdateSourceTrigger=PropertyChanged}"
+                            <ComboBox ItemsSource="{Binding CarsVM.Cars, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, Mode=TwoWay}"
                                       SelectedValuePath="Number"
                                       SelectedValue="{Binding CarNumber, UpdateSourceTrigger=PropertyChanged}"
                                       DisplayMemberPath="Number"/>
