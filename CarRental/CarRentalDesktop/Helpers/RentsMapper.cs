@@ -14,8 +14,8 @@ namespace CarRentalDesktop.ViewModel
             {
                 CarNumber = x.CarNumber,
                 ClientNumberLicense = x.ClientNumberLicense,
-                StartRent = x.StartRent,
-                EndRent = x.EndRent,
+                StartRent = x.StartRent.Date,
+                EndRent = x.EndRent.Date,
                 DayRentCount = x.DayRentCount,
                 Fine = x.Fine,
             }).ToList();
@@ -26,8 +26,8 @@ namespace CarRentalDesktop.ViewModel
             {
                 CarNumber = vmRent.CarNumber,
                 ClientNumberLicense = vmRent.ClientNumberLicense,
-                StartRent = vmRent.StartRent,
-                EndRent = vmRent.EndRent,
+                StartRent = vmRent.StartRent.Date,
+                EndRent = vmRent.EndRent.Date,
                 DayRentCount = vmRent.DayRentCount,
                 Fine = vmRent.Fine,
             };

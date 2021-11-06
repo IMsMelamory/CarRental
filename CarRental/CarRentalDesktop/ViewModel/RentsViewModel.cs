@@ -53,15 +53,8 @@ namespace CarRentalDesktop.ViewModel
         {
             get => _startRent;
             set
-            {
-                if (DateTime.TryParse(value, out _dayStart) == false)
-                {
-                    MessageBox.Show("Введите полную дату рождения");
-                }
-                else
-                {
-                    _startRent = value;
-                }
+            {          
+                _startRent = value;
                 OnPropertyChanged();
             }
         }
@@ -70,14 +63,7 @@ namespace CarRentalDesktop.ViewModel
             get => _endRent;
             set
             {
-                if (DateTime.TryParse(value, out _dayEnd) == false)
-                {
-                    MessageBox.Show("Введите полную дату рождения");
-                }
-                else
-                {
-                    _endRent = value;
-                }
+                _endRent = value;
                 OnPropertyChanged();
             }
         }
@@ -121,30 +107,44 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand Return { get; set; }
         private void AddNewRent(object arg)
         {
-            var rent = new RentViewModel() 
-            { 
-                ClientNumberLicense = ClientNumberLicense, 
-                CarNumber = CarNumber, 
-                StartRent = _dayStart, 
-                EndRent = DateTime.MinValue, 
-                Fine = 0, 
-                DayRentCount = DayRentCount 
-            };
-            Rents.Add(rent);
-            ClearFields();
-            RentsRepository.Add(RentMap.ToRent(rent));
+            if (DateTime.TryParse(StartRent, out _dayStart) == false)
+            {
+                MessageBox.Show("Введите полную дату начала аренды");
+            }
+            else
+            {
+                var rent = new RentViewModel()
+                {
+                    ClientNumberLicense = ClientNumberLicense,
+                    CarNumber = CarNumber,
+                    StartRent = _dayStart,
+                    EndRent = DateTime.MinValue,
+                    Fine = 0,
+                    DayRentCount = DayRentCount
+                };
+                Rents.Add(rent);
+                ClearFields();
+                RentsRepository.Add(RentMap.ToRent(rent));
+            }
         }
         private void ReturnRent(object arg)
         {
-            if (SelectedRent != null)
+            if (DateTime.TryParse(EndRent, out _dayEnd) == false)
             {
-                var selectRent = RentMap.ToRent(SelectedRent);
-                RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, _dayStart);
-                RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, _dayEnd);
-                SelectedRent.EndRent = _dayEnd;
-                ChekFine(SelectedRent);
+                MessageBox.Show("Введите полную дату окончания аренды");
             }
-            ClearFields();
+            else
+            {
+                if (SelectedRent != null)
+                {
+                    var selectRent = RentMap.ToRent(SelectedRent);
+                    RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, _dayEnd);
+                    RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, _dayEnd);
+                    SelectedRent.EndRent = _dayEnd;
+                    ChekFine(SelectedRent);
+                }
+                ClearFields();
+            }
         }
         public RentViewModel SelectedRent
         {
@@ -199,11 +199,13 @@ namespace CarRentalDesktop.ViewModel
         }
         private void ChekFine(RentViewModel car)
         {
-            if ((car.EndRent - car.StartRent).Days > car.DayRentCount)
+            if ((car.EndRent - car.StartRent).TotalDays > car.DayRentCount)
             {
-                car.Fine = ((car.EndRent - car.StartRent).Days - car.DayRentCount) * 5;
+                car.Fine = ((car.EndRent - car.StartRent).TotalDays - car.DayRentCount) * 5;
             }
+            var k = 0;
         }
+        
         public override string Header => "Rents";
     }
 }
