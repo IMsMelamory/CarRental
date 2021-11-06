@@ -51,10 +51,11 @@ namespace CarRentalCore.Repositories
         {
             UpdateDataIfNotExist();
             var findCar = _entities.FirstOrDefault(x => (x.ClientNumberLicense == clientDriverLicense) && (x.CarNumber == carNumber) && (x.EndRent == endRent));
+            var dayCount = (findCar.EndRent - findCar.StartRent).Days / 30+1;
             {
-                if ((findCar.EndRent - findCar.StartRent).Days > findCar.DayRentCount)
+                if (dayCount > findCar.DayRentCount)
                 {
-                    findCar.Fine = ((findCar.EndRent - findCar.StartRent).Days - findCar.DayRentCount) * 5;
+                    findCar.Fine = (dayCount - findCar.DayRentCount) * 5;
                 }
             }
             ForceUpdate();

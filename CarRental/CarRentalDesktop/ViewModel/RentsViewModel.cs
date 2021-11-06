@@ -199,13 +199,12 @@ namespace CarRentalDesktop.ViewModel
         }
         private void ChekFine(RentViewModel car)
         {
-            if ((car.EndRent - car.StartRent).TotalDays > car.DayRentCount)
+            var dayCount = (car.EndRent - car.StartRent).Days / 30+1;
+            if (dayCount > car.DayRentCount)
             {
-                car.Fine = ((car.EndRent - car.StartRent).TotalDays - car.DayRentCount) * 5;
+                car.Fine = (dayCount - car.DayRentCount) * 5;
             }
-            var k = 0;
         }
-        
         public override string Header => "Rents";
     }
 }
