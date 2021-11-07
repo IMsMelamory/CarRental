@@ -77,8 +77,8 @@ namespace CarRentalDesktop.ViewModel
         {
             ManagerVM = managerVM;
             AddNew = new RelayCommand(AddNewClient);
-            Remove = new RelayCommand(RemoveClient, IsEnable);
-            Save = new RelayCommand(SaveClient, IsEnable);
+            Remove = new RelayCommand(RemoveClient, RemoveClient => SelectedClient != null);
+            Save = new RelayCommand(SaveClient, SaveClient => SelectedClient != null);
             //Clear = new RelayCommand(ClearClient, IsEnable);
             ClientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
             Clients = new ObservableCollection<ClientViewModel>(ClientMap.ToViewModel(ClientsRepository.GetAll()));
@@ -142,7 +142,6 @@ namespace CarRentalDesktop.ViewModel
                 ClearFields();
                 ClientsRepository.Add(ClientMap.ToClient(client));
             }
-
         }
 
         private void ClearFields()
@@ -192,10 +191,6 @@ namespace CarRentalDesktop.ViewModel
                  ClearFields();
              }
          }*/
-        private bool IsEnable(object value)
-        {
-            return SelectedClient != null;
-        }
         public override string Header => "Clients";
     }
 }

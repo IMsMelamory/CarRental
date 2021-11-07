@@ -3,6 +3,7 @@ using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
 using CarRentalDesktop.Helpers;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace CarRentalDesktop.ViewModel
 {
@@ -64,9 +65,9 @@ namespace CarRentalDesktop.ViewModel
         public CarsViewModel()
         {
             AddNew = new RelayCommand(AddNewCar);
-            Remove = new RelayCommand(RemoveCar, IsEnable);
-            Clear = new RelayCommand(ClearCar, IsEnable);
-            Save = new RelayCommand(SaveCar);
+            Remove = new RelayCommand(RemoveCar, RemoveCar => SelectedCar != null);
+            Clear = new RelayCommand(ClearCar);
+            Save = new RelayCommand(SaveCar, SaveCar => SelectedCar != null);
             CarRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
             Cars = new ObservableCollection<CarViewModel>(CarVM.ToViewModel(CarRepository.GetAll()));
         }
@@ -100,11 +101,25 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand Save { get; set; }
         private void AddNewCar(object arg)
         {
+            if (DayPrice <= 0)
+            {
+                MessageBox.Show("Цена аренды должна быть >0");
+            }
+            else
+            {
 
-            var car = new CarViewModel() { Number = Number, Model = Model, Color = Color, DateRelease = DateRelease, DayPrice = DayPrice, ID = CarRepository.FindMaxIDCar() + 1 };
-            Cars.Add(car);
-            ClearFields();
-            CarRepository.Add(CarVM.ToCar(car));
+                var car = new CarViewModel() 
+                { 
+                    Number = Number, 
+                    Model = Model, 
+                    Color = Color, 
+                    DateRelease = DateRelease, 
+                    DayPrice = DayPrice, 
+                    ID = CarRepository.FindMaxIDCar() + 1 };
+                Cars.Add(car);
+                ClearFields();
+                CarRepository.Add(CarVM.ToCar(car));
+            }
         }
 
         private void ClearFields()
@@ -150,10 +165,6 @@ namespace CarRentalDesktop.ViewModel
             {
                 ClearFields();
             }
-        }
-        private bool IsEnable (object value)
-        {
-            return SelectedCar != null;
         }
         public override string Header => "Cars";
     }

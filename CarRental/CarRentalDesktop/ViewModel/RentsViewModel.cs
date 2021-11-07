@@ -92,8 +92,8 @@ namespace CarRentalDesktop.ViewModel
             ClientsVM = clientsVM;
             CarsVM = carsVM;
             AddNew = new RelayCommand(AddNewRent);
-            Remove = new RelayCommand(RemoveRent);
-            Return = new RelayCommand(ReturnRent);
+            Remove = new RelayCommand(RemoveRent, RemoveRent => SelectedRent != null);
+            Return = new RelayCommand(ReturnRent, ReturnRent => SelectedRent != null);
             RentsRepository = new RentsRepository(new JsonProvider<Rent>("rents.json"));
             Rents = new ObservableCollection<RentViewModel>(RentMap.ToViewModel(RentsRepository.GetAll()));
 
@@ -113,18 +113,26 @@ namespace CarRentalDesktop.ViewModel
             }
             else
             {
-                var rent = new RentViewModel()
+                if (DayRentCount <= 0)
                 {
-                    ClientNumberLicense = ClientNumberLicense,
-                    CarNumber = CarNumber,
-                    StartRent = _dayStart,
-                    EndRent = DateTime.MinValue,
-                    Fine = 0,
-                    DayRentCount = DayRentCount
-                };
-                Rents.Add(rent);
-                ClearFields();
-                RentsRepository.Add(RentMap.ToRent(rent));
+                    MessageBox.Show("Количество дней аренды должно быть >0");
+                }
+                else
+                {
+                    var rent = new RentViewModel()
+                    {
+                        ClientNumberLicense = ClientNumberLicense,
+                        CarNumber = CarNumber,
+                        StartRent = _dayStart,
+                        EndRent = DateTime.MinValue,
+                        Fine = 0,
+                        DayRentCount = DayRentCount
+                    };
+                    Rents.Add(rent);
+                    ClearFields();
+                    RentsRepository.Add(RentMap.ToRent(rent));
+                }
+                
             }
         }
         private void ReturnRent(object arg)
@@ -193,10 +201,6 @@ namespace CarRentalDesktop.ViewModel
                  ClearFields();
              }
          }*/
-        private bool IsEnable(object value)
-        {
-            return SelectedRent != null;
-        }
         private void ChekFine(RentViewModel car)
         {
             var dayCount = (car.EndRent - car.StartRent).Days / 30+1;

@@ -57,8 +57,8 @@ namespace CarRentalDesktop.ViewModel
         public ManagersViewModel()
         {
             AddNew = new RelayCommand(AddNewManager);
-            Remove = new RelayCommand(RemoveManager, IsEnable);
-            Save = new RelayCommand(SaveManager, IsEnable);
+            Remove = new RelayCommand(RemoveManager, RemoveManager => SelectedManager != null);
+            Save = new RelayCommand(SaveManager, SaveManager => SelectedManager != null);
             Clear = new RelayCommand(ClearManager);
             ManagersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
             Managers = new ObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()));
@@ -149,10 +149,6 @@ namespace CarRentalDesktop.ViewModel
                 ClearFields();
             }
          }
-        private bool IsEnable(object value)
-        {
-            return SelectedManager != null;
-        }
         public override string Header => "Managers";
     }
 }
