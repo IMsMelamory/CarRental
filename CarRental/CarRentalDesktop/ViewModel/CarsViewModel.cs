@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class CarsViewModel: BaseViewModel
+    public class CarsViewModel: BaseTab
     {
         
         private CarViewModel _selectedCar;

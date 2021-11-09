@@ -8,7 +8,7 @@ using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class RentsViewModel: BaseViewModel
+    public class RentsViewModel: BaseTab
     {
         private RentViewModel _selectedRent;
         private string _buttonContent;

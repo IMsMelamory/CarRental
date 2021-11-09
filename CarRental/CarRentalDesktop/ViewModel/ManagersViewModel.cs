@@ -8,7 +8,7 @@ using CarRentalDesktop.Helpers;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class ManagersViewModel : BaseViewModel
+    public class ManagersViewModel : BaseTab
     {
         private string _name;
         private string _lastName;
