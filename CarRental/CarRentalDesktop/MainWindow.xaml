@@ -231,8 +231,10 @@
                     <Button Grid.Row="0"
                             Grid.Column="1"  
                             Width="50"
-                            Command="{Binding Path=Clear}"
-                            Content="x"  />
+                            Height="50"
+                            Command="{Binding Path=Clear}">
+                        <Image Source="../image/cleaar.jpg"/>
+                    </Button>
                     <Button Grid.Row="2"
                             Grid.Column="0"  
                             Height="30"
