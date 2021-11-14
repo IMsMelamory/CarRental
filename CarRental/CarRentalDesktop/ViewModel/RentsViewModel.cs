@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using CarRentalCore.Model;
 using CarRentalCore.Providers;
@@ -11,66 +12,8 @@ namespace CarRentalDesktop.ViewModel
     public class RentsViewModel: BaseTab
     {
         private RentViewModel _selectedRent;
-        private string _clientNumderLicense;
-        private string _carNmber;
-        private DateTime _startRent;
-        private DateTime _endRent;
-        private int _dayRentCount;
-        private double _fine;
-        public string ClientNumberLicense
-        {
-            get => _clientNumderLicense;
-            set
-            {
-                _clientNumderLicense = value;
-                OnPropertyChanged();
-            }
-        }
-        public string CarNumber
-        {
-            get => _carNmber;
-            set
-            {
-                _carNmber = value;
-                OnPropertyChanged();
-            }
-        }
-        public DateTime StartRent
-        {
-            get => _startRent;
-            set
-            {          
-                _startRent = value;
-                OnPropertyChanged();
-            }
-        }
-        public DateTime EndRent
-        {
-            get => _endRent;
-            set
-            {
-                _endRent = value;
-                OnPropertyChanged();
-            }
-        }
-        public int DayRentCount
-        {
-            get => _dayRentCount;
-            set
-            {
-                _dayRentCount = value;
-                OnPropertyChanged();
-            }
-        }
-        public double Fine
-        {
-            get => _fine;
-            set
-            {
-                _fine = value;
-                OnPropertyChanged();
-            }
-        }
+        private RentViewModel _currentRent;
+
         public RentsViewModel(ClientsViewModel clientsVM, CarsViewModel carsVM)
         {
             ClientsVM = clientsVM;
@@ -88,7 +31,15 @@ namespace CarRentalDesktop.ViewModel
         public RentsRepository RentsRepository { get; set; }
         public ObservableCollection<RentViewModel> Rents { get; set; }
         public RentsMapper RentMap { get; set; } = new RentsMapper();
-
+        public RentViewModel CurrentRent
+        {
+            get => _currentRent;
+            set
+            {
+                _currentRent = value;
+                OnPropertyChanged();
+            }
+        }
         public RelayCommand AddNew { get; set; }
         public RelayCommand Remove { get; set; }
         public RelayCommand Return { get; set; }
@@ -99,7 +50,7 @@ namespace CarRentalDesktop.ViewModel
         }
         private void AddNewRent(object arg)
         {
-            if (DayRentCount <= 0)
+           /* if (DayRentCount <= 0)
             {
                 MessageBox.Show("Количество дней аренды должно быть >0");
             }
@@ -117,16 +68,16 @@ namespace CarRentalDesktop.ViewModel
                 Rents.Add(rent);
                 ClearFields();
                 RentsRepository.Add(RentMap.ToRent(rent));
-                }
+                }*/
         }
         private void ReturnRent(object arg)
         {
                 if (SelectedRent != null)
                 {
                     var selectRent = RentMap.ToRent(SelectedRent);
-                    RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, EndRent);
-                    RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, EndRent);
-                    SelectedRent.EndRent = EndRent;
+                    RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, CurrentRent.EndRent);
+                    RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, CurrentRent.EndRent);
+                    SelectedRent.EndRent = CurrentRent.EndRent;
                     ChekFine(SelectedRent);
                 }
                 ClearFields();
@@ -139,12 +90,7 @@ namespace CarRentalDesktop.ViewModel
                 _selectedRent = value;
                 if (SelectedRent != null)
                 {
-                    ClientNumberLicense = value.ClientNumberLicense;
-                    CarNumber = value.CarNumber;
-                    StartRent = value.StartRent;
-                    EndRent = value.EndRent;
-                    Fine = value.Fine;
-                    DayRentCount = value.DayRentCount;
+                    CurrentRent = SelectedRent;
                 }
                 OnPropertyChanged();
             }
@@ -152,12 +98,12 @@ namespace CarRentalDesktop.ViewModel
 
         private void ClearFields()
         {
-            ClientNumberLicense = string.Empty;
-            CarNumber = string.Empty;
-            StartRent = DateTime.MinValue;
-            EndRent = DateTime.MinValue;
-            Fine = 0;
-            DayRentCount = 0;
+            CurrentRent.ClientNumberLicense = string.Empty;
+            CurrentRent.CarNumber = string.Empty;
+            CurrentRent.StartRent = DateTime.MinValue;
+            CurrentRent.EndRent = DateTime.MinValue;
+            CurrentRent.Fine = 0;
+            CurrentRent.DayRentCount = 0;
 
         }
         private void RemoveRent(object arg)

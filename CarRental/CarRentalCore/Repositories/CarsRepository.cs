@@ -14,7 +14,17 @@ namespace CarRentalCore.Repositories
         {
             UpdateDataIfNotExist();
             var id = _entities.OrderByDescending(x => x.ID).FirstOrDefault();
-            return id.ID;
+            if (id == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return id.ID;
+
+            }
+
+            
         }
 
         public void RemoveByCarNumber(string number)

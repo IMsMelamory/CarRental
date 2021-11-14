@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using CarRentalCore.Model;
 using CarRentalCore.Providers;
@@ -12,6 +13,7 @@ namespace CarRentalDesktop.ViewModel
 
     {
         private ClientViewModel _selectedClient;
+        private ClientViewModel _currentClient;
         private ObservableCollection<ClientViewModel> _clients;
         public ClientsViewModel(ManagersViewModel managerVM)
         {
@@ -24,7 +26,16 @@ namespace CarRentalDesktop.ViewModel
             UpdateClients();
         }
         public ManagersViewModel ManagerVM { get; set; }
-        public ClientViewModel CurrentClient { get; set; }
+        public ClientViewModel CurrentClient
+        {
+            get => _currentClient;
+
+            set
+            {
+                _currentClient = value;
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<ClientViewModel> Clients
         {
             get => _clients;
@@ -53,17 +64,22 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand SaveClient { get; set; }
         private void UpdateClients()
         {
-            Clients = new ObservableCollection<ClientViewModel>(ClientMap.ToViewModel(ClientsRepository.GetAll()));
+            Clients = new ObservableCollection<ClientViewModel>(ClientMap.ToViewModel(ClientsRepository.GetAll()).OrderBy(x => x.ID));
         }
         private void AddNew(object arg)
         {
-            var client = new ClientViewModel();
-            SelectedClient = client;
-            client.Name = SelectedClient.Name;
-            client.LastName = SelectedClient.LastName;
-
-            ClientsRepository.Add(ClientMap.ToClient(client));
-            ClearFields();
+            CurrentClient = new ClientViewModel();
+            //SelectedClient = new ClientViewModel();
+            /*var client = new ClientViewModel()
+            {
+                Name = CurrentClient.Name,
+                LastName = CurrentClient.LastName,
+                SecondLastName = CurrentClient.SecondLastName,
+                BDay = CurrentClient.BDay,
+                ID = 0
+            };*/
+            ClientsRepository.Add(ClientMap.ToClient(CurrentClient));
+            //ClearFields();
             UpdateClients();
         }
 
@@ -83,25 +99,18 @@ namespace CarRentalDesktop.ViewModel
         }
         private void Save(object arg)
         {
-            if (SelectedClient != null)
+            if (SelectedClient == null)
             {
-                var myClient = ClientsRepository.FindByID(SelectedClient.ID);
-                myClient.Name = CurrentClient.Name;
-                myClient.LastName = CurrentClient.LastName;
-                myClient.SecondLastName = CurrentClient.SecondLastName;
-                myClient.NumberDriversLicence = CurrentClient.NumberDriversLicence;
-                myClient.ManagerID = CurrentClient.ManagerID;
-                ClearFields();
-                UpdateClients();
+                return;
             }
+            ClientsRepository.EditById(SelectedClient.ID, ClientMap.ToClient(CurrentClient));
+            ClearFields();
+            UpdateClients();
         }
 
         private void ClearClient(object arg)
          {
-             if (SelectedClient != null)
-             {
                  ClearFields();
-             }
          }
         public override string Header => "Clients";
     }

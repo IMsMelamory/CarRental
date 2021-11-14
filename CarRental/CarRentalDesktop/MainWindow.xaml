@@ -55,19 +55,19 @@
                             Margin="5">
                             <TextBlock Text="Номер" />
                             <TextBox  MaxLength="20" 
-                                      Text="{Binding Number, UpdateSourceTrigger=PropertyChanged}" />
+                                      Text="{Binding CurrentCar.Number, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Text="Модель" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding Model,  UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding CurrentCar.Model,  UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Text="Цвет" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding Color,  UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding CurrentCar.Color,  UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Text="Год выпуска" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding DateRelease,  UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding CurrentCar.DateRelease,  UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Text="Цена аренды за день" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding DayPrice,  UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding CurrentCar.DayPrice,  UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </Grid>
                     <Button Grid.Row="0"
@@ -115,16 +115,16 @@
                                              Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                                              Header="Имя"/>
                         <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged}" 
+                                             Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                                              Header="Фамилия"/>
                         <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged}" 
+                                             Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                                              Header="Отчество"/>
                         <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged}" 
+                                             Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                                              Header="Дата рождения"/>
                         <DataGridTextColumn IsReadOnly="True"  
-                                            Binding="{Binding Path = NumberDriversLicence }" 
+                                            Binding="{Binding Path = NumberDriversLicence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                                             Header="Номер водительского удостоверения"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -147,18 +147,18 @@
                                     Orientation="Vertical" 
                                     Margin="5">
                             <TextBlock  Text="Имя" />
-                            <TextBox  MaxLength="20"  Text ="{Binding SelectedClient.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                            <TextBox  MaxLength="20"  Text ="{Binding CurrentClient.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             <TextBlock Text="Фамилия" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding SelectedClient.LastName,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                     Text="{Binding CurrentClient.LastName,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             <TextBlock Text="Отчество" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding SelectedClient.SecondLastName,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                     Text="{Binding CurrentClient.SecondLastName,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             <TextBlock Text="Дата рождения" />
-                            <DatePicker  Text="{Binding SelectedClient.BDay,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}" />
+                            <DatePicker  Text="{Binding CurrentClient.BDay,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}" />
                             <TextBlock Text="Номер водительского удостоверения" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding SelectedClient.NumberDriversLicence, UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding CurrentClient.NumberDriversLicence, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Text="Фамилия менеджера" />
                             <ComboBox ItemsSource="{Binding ManagerVM.Managers,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                                       SelectedValuePath="ID"
@@ -211,11 +211,14 @@
                         <DataGridTextColumn  IsReadOnly="True" 
                                              Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged}" 
                                              Header="Имя"/>
-                        <DataGridTextColumn  Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
+                        <DataGridTextColumn  IsReadOnly="True"
+                                             Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
                                              Header="Фамилия"/>
-                        <DataGridTextColumn  Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" 
+                        <DataGridTextColumn  IsReadOnly="True"
+                                             Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" 
                                              Header="Отчество"/>
-                        <DataGridTextColumn  Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
+                        <DataGridTextColumn  IsReadOnly="True"
+                                             Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
                                              Header="Дата рождения"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -236,15 +239,15 @@
                             Margin="5">
                             <TextBlock Text="Имя" />
                             <TextBox  MaxLength="20" 
-                                      Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+                                      Text="{Binding CurrentManager.Name, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
                             <TextBlock Text="Фамилия" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                                     Text="{Binding CurrentManager.LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
                             <TextBlock Text="Отчество" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                                     Text="{Binding CurrentManager.SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
                             <TextBlock Text="Дата рождения" />
-                            <DatePicker  Text="{Binding BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat = dd-MM-yyyy}" />
+                            <DatePicker  Text="{Binding CurrentManager.BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat = dd-MM-yyyy}" />
                         </StackPanel>
                     </Grid>
                     <Button Grid.Row="0"
@@ -314,25 +317,25 @@
                             <TextBlock Text="Номер водительского удостоверения" />
                             <ComboBox ItemsSource="{Binding ClientsVM.Clients, UpdateSourceTrigger=PropertyChanged}"
                                       SelectedValuePath="NumberDriversLicence"
-                                      SelectedValue="{Binding ClientNumberLicense, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedValue="{Binding CurrentRent.ClientNumberLicense, UpdateSourceTrigger=PropertyChanged}"
                                       DisplayMemberPath="NumberDriversLicence"/>
                             <TextBlock Text="Номер машины" />
                             <ComboBox ItemsSource="{Binding CarsVM.Cars, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, Mode=TwoWay}"
                                       SelectedValuePath="Number"
-                                      SelectedValue="{Binding CarNumber, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedValue="{Binding CurrentRent.CarNumber, UpdateSourceTrigger=PropertyChanged}"
                                       DisplayMemberPath="Number"/>
                             <TextBlock Text="Дата начала аренды" />
-                            <DatePicker  Text="{Binding StartRent,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}"
+                            <DatePicker  Text="{Binding CurrentRent.StartRent,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}"
                                          SelectedDate="{x:Static sys:DateTime.Now}" />
                             <TextBlock Text="Дата окончания аренды" />
-                            <DatePicker  Text="{Binding EndRent,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}" />
+                            <DatePicker  Text="{Binding CurrentRent.EndRent,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}" />
                             <TextBlock Text="Количество дней аренды" />
                             <TextBox MaxLength="20" 
-                                     Text="{Binding DayRentCount,  UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding CurrentRent.DayRentCount,  UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Text="Пеня" />
                             <TextBox MaxLength="20" 
                                      IsReadOnly="True" 
-                                     Text="{Binding Fine,  UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding CurrentRent.Fine,  UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </Grid>
                     <Button Grid.Row="0"

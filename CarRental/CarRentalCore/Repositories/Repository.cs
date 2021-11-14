@@ -44,6 +44,14 @@ namespace CarRentalCore.Repositories
             _entities.Remove(entityToRemove);
             ForceUpdate();
         }
+        public void EditById(int id, T entity)
+        {
+            UpdateDataIfNotExist();
+            var oldEntity = _entities.FirstOrDefault(x => x.ID == id);
+            _entities.Remove(oldEntity);
+            _entities.Add(entity);
+            ForceUpdate();
+        }
 
         public void ForceUpdate()
         {
