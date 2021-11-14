@@ -8,7 +8,6 @@ namespace CarRentalDesktop.ViewModel
 {
     public class ClientViewModel: UserViewModel
     {
-        
         private string _numberDriversLicence;
         private int _managerID;
         public string NumberDriversLicence

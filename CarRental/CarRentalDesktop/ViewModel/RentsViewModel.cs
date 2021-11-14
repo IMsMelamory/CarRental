@@ -11,26 +11,12 @@ namespace CarRentalDesktop.ViewModel
     public class RentsViewModel: BaseTab
     {
         private RentViewModel _selectedRent;
-        private string _buttonContent;
-        public string ButtonContent
-        {
-            get => _buttonContent;
-            set
-            {
-                _buttonContent = value;
-                OnPropertyChanged();
-            }
-        }
         private string _clientNumderLicense;
         private string _carNmber;
-        private string _startRent;
-        private DateTime _dayStart;
-        private string _endRent;
-        private DateTime _dayEnd;
+        private DateTime _startRent;
+        private DateTime _endRent;
         private int _dayRentCount;
         private double _fine;
-
-
         public string ClientNumberLicense
         {
             get => _clientNumderLicense;
@@ -49,7 +35,7 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public string StartRent
+        public DateTime StartRent
         {
             get => _startRent;
             set
@@ -58,7 +44,7 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public string EndRent
+        public DateTime EndRent
         {
             get => _endRent;
             set
@@ -85,19 +71,20 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public ClientsViewModel ClientsVM { get; set; }
-        public CarsViewModel CarsVM { get; set; }
-        public RentsViewModel(ClientsViewModel clientsVM, CarsViewModel carsVM) 
+        public RentsViewModel(ClientsViewModel clientsVM, CarsViewModel carsVM)
         {
             ClientsVM = clientsVM;
             CarsVM = carsVM;
-            AddNew = new RelayCommand(AddNewRent);
+            AddNew = new RelayCommand(AddNewRent, AddNewRent => SelectedRent == null);
             Remove = new RelayCommand(RemoveRent, RemoveRent => SelectedRent != null);
             Return = new RelayCommand(ReturnRent, ReturnRent => SelectedRent != null);
+            Clear = new RelayCommand(ClearRent);
             RentsRepository = new RentsRepository(new JsonProvider<Rent>("rents.json"));
-            Rents = new ObservableCollection<RentViewModel>(RentMap.ToViewModel(RentsRepository.GetAll()));
+            UpdateRents();
 
         }
+        public ClientsViewModel ClientsVM { get; set; }
+        public CarsViewModel CarsVM { get; set; }
         public RentsRepository RentsRepository { get; set; }
         public ObservableCollection<RentViewModel> Rents { get; set; }
         public RentsMapper RentMap { get; set; } = new RentsMapper();
@@ -105,54 +92,44 @@ namespace CarRentalDesktop.ViewModel
         public RelayCommand AddNew { get; set; }
         public RelayCommand Remove { get; set; }
         public RelayCommand Return { get; set; }
+        public RelayCommand Clear { get; set; }
+        private void UpdateRents()
+        {
+            Rents = new ObservableCollection<RentViewModel>(RentMap.ToViewModel(RentsRepository.GetAll()));
+        }
         private void AddNewRent(object arg)
         {
-            if (DateTime.TryParse(StartRent, out _dayStart) == false)
+            if (DayRentCount <= 0)
             {
-                MessageBox.Show("Введите полную дату начала аренды");
+                MessageBox.Show("Количество дней аренды должно быть >0");
             }
             else
             {
-                if (DayRentCount <= 0)
+                var rent = new RentViewModel()
                 {
-                    MessageBox.Show("Количество дней аренды должно быть >0");
+                    ClientNumberLicense = ClientNumberLicense,
+                    CarNumber = CarNumber,
+                    StartRent = StartRent,
+                    EndRent = DateTime.MinValue,
+                    Fine = 0,
+                    DayRentCount = DayRentCount
+                };
+                Rents.Add(rent);
+                ClearFields();
+                RentsRepository.Add(RentMap.ToRent(rent));
                 }
-                else
-                {
-                    var rent = new RentViewModel()
-                    {
-                        ClientNumberLicense = ClientNumberLicense,
-                        CarNumber = CarNumber,
-                        StartRent = _dayStart,
-                        EndRent = DateTime.MinValue,
-                        Fine = 0,
-                        DayRentCount = DayRentCount
-                    };
-                    Rents.Add(rent);
-                    ClearFields();
-                    RentsRepository.Add(RentMap.ToRent(rent));
-                }
-                
-            }
         }
         private void ReturnRent(object arg)
         {
-            if (DateTime.TryParse(EndRent, out _dayEnd) == false)
-            {
-                MessageBox.Show("Введите полную дату окончания аренды");
-            }
-            else
-            {
                 if (SelectedRent != null)
                 {
                     var selectRent = RentMap.ToRent(SelectedRent);
-                    RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, _dayEnd);
-                    RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, _dayEnd);
-                    SelectedRent.EndRent = _dayEnd;
+                    RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, EndRent);
+                    RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, EndRent);
+                    SelectedRent.EndRent = EndRent;
                     ChekFine(SelectedRent);
                 }
                 ClearFields();
-            }
         }
         public RentViewModel SelectedRent
         {
@@ -164,8 +141,8 @@ namespace CarRentalDesktop.ViewModel
                 {
                     ClientNumberLicense = value.ClientNumberLicense;
                     CarNumber = value.CarNumber;
-                    StartRent = value.StartRent.ToString();
-                    EndRent = value.EndRent.ToString();
+                    StartRent = value.StartRent;
+                    EndRent = value.EndRent;
                     Fine = value.Fine;
                     DayRentCount = value.DayRentCount;
                 }
@@ -177,33 +154,35 @@ namespace CarRentalDesktop.ViewModel
         {
             ClientNumberLicense = string.Empty;
             CarNumber = string.Empty;
-            StartRent = string.Empty;
-            EndRent = string.Empty;
+            StartRent = DateTime.MinValue;
+            EndRent = DateTime.MinValue;
             Fine = 0;
             DayRentCount = 0;
 
         }
         private void RemoveRent(object arg)
         {
-            if (SelectedRent != null)
+            if (SelectedRent == null)
             {
-                RentsRepository.Remove(RentMap.ToRent(SelectedRent));
-                Rents.Remove(SelectedRent);
-                ClearFields();
+                return;
             }
-
+            RentsRepository.RemoveById(RentMap.ToRent(SelectedRent).ID);
+            ClearFields();
+            UpdateRents();
         }
 
-        /* private void ClearClient(object arg)
+        private void ClearRent(object arg)
          {
-             if (SelectedClient != null)
+             if (SelectedRent == null)
              {
-                 ClearFields();
+                return;
              }
-         }*/
+            ClearFields();
+            SelectedRent = null;
+        }
         private void ChekFine(RentViewModel car)
         {
-            var dayCount = (car.EndRent - car.StartRent).Days / 30+1;
+            var dayCount = (car.EndRent - car.StartRent).Days ;
             if (dayCount > car.DayRentCount)
             {
                 car.Fine = (dayCount - car.DayRentCount) * 5;

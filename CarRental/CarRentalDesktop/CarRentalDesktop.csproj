@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="image\clear.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="View\" />
   </ItemGroup>
 
@@ -16,6 +20,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CarRentalCore\CarRentalCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="image\clear.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   
 </Project>

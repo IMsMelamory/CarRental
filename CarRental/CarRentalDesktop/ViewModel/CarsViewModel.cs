@@ -17,6 +17,15 @@ namespace CarRentalDesktop.ViewModel
         private string _color;
         private string _dateRelease;
         private int _dayPrice;
+        public CarsViewModel()
+        {
+            AddNewCar = new RelayCommand(AddNew, AddNew => SelectedCar == null);
+            RemoveCar = new RelayCommand(Remove, RemoveCar => SelectedCar != null);
+            Clear = new RelayCommand(ClearCar);
+            SaveCar = new RelayCommand(Save, SaveCar => SelectedCar != null);
+            CarRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
+            UpdateCars();
+        }
         public string Number
         {
             get => _number;
@@ -62,44 +71,42 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public CarsViewModel()
-        {
-            AddNew = new RelayCommand(AddNewCar);
-            Remove = new RelayCommand(RemoveCar, RemoveCar => SelectedCar != null);
-            Clear = new RelayCommand(ClearCar);
-            Save = new RelayCommand(SaveCar, SaveCar => SelectedCar != null);
-            CarRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
-            Cars = new ObservableCollection<CarViewModel>(CarVM.ToViewModel(CarRepository.GetAll()));
-        }
-        public ObservableCollection<CarViewModel> Cars 
+        public ObservableCollection<CarViewModel> Cars
         {
             get => _list;
 
             set { _list = value; OnPropertyChanged(); }
         }
-       public CarsRepository CarRepository { get; set; }
-       public CarsMapper CarVM { get; set; } = new CarsMapper();
-
-
+        public CarsRepository CarRepository { get; set; }
+        public CarsMapper CarVM { get; set; } = new CarsMapper();
         public CarViewModel SelectedCar
         {
             get => _selectedCar;
             set
             {
                 _selectedCar = value;
-                Number = value.Number;
-                Model = value.Model;
-                Color = value.Color;
-                DateRelease = value.DateRelease;
-                DayPrice = value.DayPrice;
+                if (SelectedCar != null)
+                {
+                    Number = value.Number;
+                    Model = value.Model;
+                    Color = value.Color;
+                    DateRelease = value.DateRelease;
+                    DayPrice = value.DayPrice;
+                }
+                
                 OnPropertyChanged();
             }
         }
-        public RelayCommand AddNew { get; set; }
-        public RelayCommand Remove { get; set; }
+        public RelayCommand AddNewCar { get; set; }
+        public RelayCommand RemoveCar { get; set; }
         public RelayCommand Clear { get; set; }
-        public RelayCommand Save { get; set; }
-        private void AddNewCar(object arg)
+        public RelayCommand SaveCar { get; set; }
+        private void UpdateCars()
+        {
+            Cars = new ObservableCollection<CarViewModel>(CarVM.ToViewModel(CarRepository.GetAll()));
+        }
+       
+        private void AddNew(object arg)
         {
             if (DayPrice <= 0)
             {
@@ -131,18 +138,27 @@ namespace CarRentalDesktop.ViewModel
             DayPrice = 0;
         }
 
-        private void RemoveCar(object arg)
+        private void Remove(object arg)
         {
-            if (SelectedCar != null)
+            if (SelectedCar == null)
             {
-                CarRepository.Remove(CarVM.ToCar(SelectedCar));
-                Cars.Remove(SelectedCar);
-                ClearFields();
-            }   
+                return;
+            }
+            CarRepository.RemoveById(CarVM.ToCar(SelectedCar).ID);
+            ClearFields();
+            UpdateCars();
         }
-        private void SaveCar(object arg)
+        private void Save(object arg)
         {
-            if (SelectedCar != null)
+            if (SelectedCar == null)
+            {
+                return; 
+            }
+            if (DayPrice <= 0)
+            {
+                MessageBox.Show("Цена аренды должна быть >0");
+            }
+            else
             {
                 var myCar = CarRepository.FindByID(SelectedCar.ID);
                 myCar.Number = Number;
@@ -151,20 +167,18 @@ namespace CarRentalDesktop.ViewModel
                 myCar.DayPrice = DayPrice;
                 myCar.DateRelease = DateRelease;
                 CarRepository.ForceUpdate();
-                SelectedCar.Number = Number;
-                SelectedCar.Model = Model;
-                SelectedCar.Color = Color;
-                SelectedCar.DayPrice = DayPrice;
-                SelectedCar.DateRelease = DateRelease;
                 ClearFields();
+                UpdateCars();
             }
         }
         private void ClearCar(object arg)
         {
-            if (SelectedCar != null)
+            if (SelectedCar == null)
             {
-                ClearFields();
+                return;
             }
+            ClearFields();
+            SelectedCar = null;
         }
         public override string Header => "Cars";
     }

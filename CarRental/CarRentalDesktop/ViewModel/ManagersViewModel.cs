@@ -13,8 +13,22 @@ namespace CarRentalDesktop.ViewModel
         private string _name;
         private string _lastName;
         private string _secondLastName;
-        private string _bDay;
-        private DateTime _day;
+        private DateTime _bDay;
+        private ManagerViewModel _selectedManager;
+
+        public ManagersViewModel()
+        {
+            AddNewManager = new RelayCommand(AddNew, AddNew=> SelectedManager == null);
+            RemoveManager = new RelayCommand(Remove, Remove=> SelectedManager != null);
+            SaveManager = new RelayCommand(Save, Save => SelectedManager != null);
+            Clear = new RelayCommand(ClearManager);
+            ManagersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
+            UpdateManagers();
+        }
+
+        public ObservableCollection<ManagerViewModel> Managers { get; set; }
+        public ManagersRepository ManagersRepository { get; set; }
+        public ManagersMapper ManagerMap { get; set; } = new ManagersMapper();
         public string Name
         {
             get => _name;
@@ -42,31 +56,16 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public string BDay
+        public DateTime BDay
         {
             get => _bDay;
             set
             {
-               
-                    _bDay = value;
+
+                _bDay = value;
                 OnPropertyChanged();
             }
         }
-        private ManagerViewModel _selectedManager;
-
-        public ManagersViewModel()
-        {
-            AddNew = new RelayCommand(AddNewManager);
-            Remove = new RelayCommand(RemoveManager, RemoveManager => SelectedManager != null);
-            Save = new RelayCommand(SaveManager, SaveManager => SelectedManager != null);
-            Clear = new RelayCommand(ClearManager);
-            ManagersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
-            Managers = new ObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()));
-        }
-
-        public ObservableCollection<ManagerViewModel> Managers { get; set; }
-        public ManagersRepository ManagersRepository { get; set; }
-        public ManagersMapper ManagerMap { get; set; } = new ManagersMapper();
 
         public ManagerViewModel SelectedManager
         {
@@ -79,35 +78,33 @@ namespace CarRentalDesktop.ViewModel
                     Name = value.Name;
                     LastName = value.LastName;
                     SecondLastName = value.SecondLastName;
-                    BDay = value.BDay.ToString();
+                    BDay = value.BDay;
                 }
                 OnPropertyChanged();
             }
         }
-        public RelayCommand AddNew { get; set; }
-        public RelayCommand Remove { get; set; }
+        public RelayCommand AddNewManager { get; set; }
+        public RelayCommand RemoveManager { get; set; }
         public RelayCommand Clear { get; set; }
-        public RelayCommand Save { get; set; }
-        private void AddNewManager(object arg)
+        public RelayCommand SaveManager { get; set; }
+        private void UpdateManagers()
         {
-            if (DateTime.TryParse(BDay, out _day) == false)
-            {
-                MessageBox.Show("Введите полную дату рождения");
-            }
-            else
-            {
-                var manager = new ManagerViewModel()
-                {
-                    Name = Name,
-                    LastName = LastName,
-                    SecondLastName = SecondLastName,
-                    BDay = _day,
-                    ID = ManagersRepository.FindMaxIDManagers() + 1,
-                };
-                Managers.Add(manager);
-                ClearFields();
-                ManagersRepository.Add(ManagerMap.ToManager(manager));
-            } 
+            Managers = new ObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()));
+        }
+        private void AddNew(object arg)
+        {
+           var manager = new ManagerViewModel()
+           {
+                Name = Name,
+                LastName = LastName,
+                SecondLastName = SecondLastName,
+                BDay = BDay,
+                ID = ManagersRepository.FindMaxIDManagers() + 1,
+            };
+           ManagersRepository.Add(ManagerMap.ToManager(manager));
+           UpdateManagers();
+           ClearFields();
+
         }
 
         private void ClearFields()
@@ -115,39 +112,41 @@ namespace CarRentalDesktop.ViewModel
             Name = string.Empty;
             LastName = string.Empty;
             SecondLastName = string.Empty;
-            BDay = string.Empty;
+            BDay = DateTime.MinValue;
         }
 
-        private void RemoveManager(object arg)
+        private void Remove(object arg)
         {
-            if (SelectedManager != null)
+            if (SelectedManager == null)
             {
-                ManagersRepository.Remove(ManagerMap.ToManager(SelectedManager));
-                Managers.Remove(SelectedManager);
-                ClearFields();
+                return;
             }
+            ManagersRepository.RemoveById(ManagerMap.ToManager(SelectedManager).ID);
+            ClearFields();
+            UpdateManagers();
         }
-        private void SaveManager(object arg)
+        private void Save(object arg)
         {
-            if (SelectedManager != null)
+            if (SelectedManager == null)
             {
-                var myManager = ManagersRepository.FindByID(SelectedManager.ID);
-                myManager.Name = Name;
-                myManager.LastName = LastName;
-                myManager.SecondLastName = SecondLastName;
-                ManagersRepository.ForceUpdate();
-                SelectedManager.Name = Name;
-                SelectedManager.LastName = LastName;
-                SelectedManager.SecondLastName = SecondLastName;
-                ClearFields();
+                return;
             }
+            var myManager = ManagersRepository.FindByID(SelectedManager.ID);
+            myManager.Name = Name;
+            myManager.LastName = LastName;
+            myManager.SecondLastName = SecondLastName;
+            ManagersRepository.ForceUpdate();
+            ClearFields();
+            UpdateManagers();
         }
         private void ClearManager(object arg)
          {
-            if (SelectedManager != null)
+            if (SelectedManager == null)
             {
-                ClearFields();
+                return;
             }
+            ClearFields();
+            SelectedManager = null;
          }
         public override string Header => "Managers";
     }
