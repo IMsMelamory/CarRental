@@ -9,6 +9,28 @@
         d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
         Title="CarRentalClient">
     <Window.Resources>
+        <Style TargetType ="{x:Type DataGridColumnHeader}">
+            <Setter Property="Background" Value="DarkGray" />
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="ButtonDelete"
+               TargetType ="{x:Type Button}">
+            <Setter Property="Background" Value="Red" />
+            <Setter Property="Height" Value="30" />
+        </Style>
+        <Style x:Key="ButtonAddSave"
+               TargetType ="{x:Type Button}">
+            <Setter Property="Background" Value="LightBlue" />
+            <Setter Property="Height" Value="30" />
+        </Style>
+        <Style x:Key="ButtonClear"
+               TargetType ="{x:Type Button}">
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
         <DataTemplate DataType="{x:Type viewModel:CarsViewModel}">
             <Grid >
                 <Grid.ColumnDefinitions>
@@ -19,8 +41,10 @@
                           ItemsSource="{Binding Cars}"
                           SelectedItem="{Binding SelectedCar}"  
                           AutoGenerateColumns="False" 
-                          CanUserAddRows="False">
-                    <DataGrid.Columns>
+                          CanUserAddRows="False"
+                          CanUserReorderColumns="False"
+                          ColumnWidth="*">
+                    <DataGrid.Columns >
                         <DataGridTextColumn  IsReadOnly="True" 
                                              Binding="{Binding Path = Number,  UpdateSourceTrigger=PropertyChanged}" 
                                              Header="Номер"/>
@@ -72,27 +96,25 @@
                     </Grid>
                     <Button Grid.Row="0"
                             Grid.Column="1"  
-                            Width="16"
-                            Height="16"
-                            HorizontalAlignment="Right"
+                            Style="{StaticResource ButtonClear}"
                             Command="{Binding Path=Clear}">
                         <Image Source="pack://application:,,,/image/clear.jpg"/>
                     </Button>
                     <Button Grid.Row="2"
                             Grid.Column="0"  
-                            Height="30"
+                            Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path=AddNewCar}"
                             Content="Добавить"  />
                     <Button Grid.Row="2" 
                             Grid.Column="1" 
-                            Height="30"
+                            Style="{StaticResource ButtonDelete}"
                             Command="{Binding Path=RemoveCar}" 
                             CommandParameter="{Binding SelectedCar}" 
                             Content="Удалить"/>
                     <Button Grid.Row="3" 
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            Height="30"
+                            Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path=SaveCar}" 
                             CommandParameter="{Binding SelectedCar}" 
                             Content="Сохранить"/>
@@ -109,7 +131,8 @@
                           ItemsSource="{Binding Path = Clients}"
                           SelectedItem="{Binding Path = SelectedClient}"  
                           AutoGenerateColumns="False"
-                          CanUserAddRows="False">
+                          CanUserAddRows="False"
+                          ColumnWidth="*">
                     <DataGrid.Columns >
                         <DataGridTextColumn  IsReadOnly="True" 
                                              Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
@@ -169,27 +192,25 @@
                     </Grid>
                     <Button Grid.Row="0"
                             Grid.Column="1"  
-                            Width="16"
-                            Height="16"
-                            HorizontalAlignment="Right"
+                            Style="{StaticResource ButtonClear}"
                             Command="{Binding Path=Clear}">
                         <Image Source="pack://application:,,,/image/clear.jpg"/>
                     </Button>
                     <Button Grid.Row="2"
                             Grid.Column="0"  
-                            Height="30"
+                            Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path=AddNewClient}"
                             Content="Добавить"  />
                     <Button Grid.Row="2" 
                             Grid.Column="1" 
-                            Height="30"
+                            Style="{StaticResource ButtonDelete}"
                             Command="{Binding Path=RemoveClient}" 
                             CommandParameter="{Binding SelectedClient}" 
                             Content="Удалить"/>
                     <Button Grid.Row="3" 
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            Height="30"
+                            Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path=SaveClient}" 
                             CommandParameter="{Binding SelectedClient}" 
                             Content="Сохранить"/>
@@ -206,7 +227,8 @@
                           ItemsSource="{Binding Path = Managers}" 
                           SelectedItem="{Binding Path=SelectedManager}"  
                           AutoGenerateColumns="False"
-                          CanUserAddRows="False">
+                          CanUserAddRows="False"
+                          ColumnWidth="*">
                     <DataGrid.Columns >
                         <DataGridTextColumn  IsReadOnly="True" 
                                              Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged}" 
@@ -252,27 +274,25 @@
                     </Grid>
                     <Button Grid.Row="0"
                             Grid.Column="1"  
-                            Width="16"
-                            Height="16"
-                            HorizontalAlignment="Right"
+                            Style="{StaticResource ButtonClear}"
                             Command="{Binding Path=Clear}">
                         <Image Source="pack://application:,,,/image/clear.jpg"/>
                     </Button>
                     <Button Grid.Row="2"
                             Grid.Column="0"  
-                            Height="30"
+                            Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path=AddNewManager}"
                             Content="Добавить"  />
                     <Button Grid.Row="2" 
                             Grid.Column="1" 
-                            Height="30"
+                            Style="{StaticResource ButtonDelete}"
                             Command="{Binding Path=RemoveManager}" 
                             CommandParameter="Удалить" 
                             Content="Удалить"/>
                     <Button Grid.Row="3" 
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            Height="30"
+                            Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path=SaveManager}" 
                             CommandParameter="{Binding SelectedManager}" 
                             Content="Сохранить"/>
@@ -289,14 +309,27 @@
                           ItemsSource="{Binding Rents}"          
                           SelectedItem="{Binding SelectedRent}"  
                           AutoGenerateColumns="False"
-                          CanUserAddRows="False">
+                          CanUserAddRows="False"
+                          ColumnWidth="*">
                     <DataGrid.Columns >
-                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = ClientNumberLicense, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Header="Номер водительского удостоверения"/>
-                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = CarNumber, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Header="Номер машины"/>
-                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = StartRent, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Header="Дата начала аренды"/>
-                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = EndRent, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" Header="Дата окончания аренды"/>
-                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = DayRentCount, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" Header="Количество дней аренды"/>
-                        <DataGridTextColumn  IsReadOnly="True" Binding="{Binding Path = Fine, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" Header="Пеня"/>
+                        <DataGridTextColumn  IsReadOnly="True" 
+                                             Binding="{Binding Path = ClientNumberLicense, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" 
+                                             Header="Номер водительского удостоверения"/>
+                        <DataGridTextColumn  IsReadOnly="True" 
+                                             Binding="{Binding Path = CarNumber, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" 
+                                             Header="Номер машины"/>
+                        <DataGridTextColumn  IsReadOnly="True" 
+                                             Binding="{Binding Path = StartRent, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" 
+                                             Header="Дата начала аренды"/>
+                        <DataGridTextColumn  IsReadOnly="True" 
+                                             Binding="{Binding Path = EndRent, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
+                                             Header="Дата окончания аренды"/>
+                        <DataGridTextColumn  IsReadOnly="True" 
+                                             Binding="{Binding Path = DayRentCount, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" 
+                                             Header="Количество дней аренды"/>
+                        <DataGridTextColumn  IsReadOnly="True" 
+                                             Binding="{Binding Path = Fine, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
+                                             Header="Пеня"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <GridSplitter Grid.Column="0" Width="3" />
@@ -340,27 +373,25 @@
                     </Grid>
                     <Button Grid.Row="0"
                             Grid.Column="1"  
-                            Width="16"
-                            Height="16"
-                            HorizontalAlignment="Right"
+                            Style="{StaticResource ButtonClear}"
                             Command="{Binding Path=Clear}">
                         <Image Source="pack://application:,,,/image/clear.jpg"/>
                     </Button>
                     <Button Grid.Row="2"
                             Grid.Column="0"  
-                            Height="30"
+                            Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path= AddNew}"
                             Content="Оформить аренду"  />
                     <Button Grid.Row="2" 
                             Grid.Column="1" 
-                            Height="30"
+                            Style="{StaticResource ButtonDelete}"
                             Command="{Binding Path=Remove}" 
                             CommandParameter="{Binding SelectedRent}" 
                             Content="Удалить"/>
                     <Button Grid.Row="3" 
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
-                            Height="30"
+                            Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path=Return}" 
                             CommandParameter="{Binding SelectedRent}" 
                             Content="Вернуть машину"/>

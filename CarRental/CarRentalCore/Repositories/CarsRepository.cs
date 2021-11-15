@@ -13,18 +13,10 @@ namespace CarRentalCore.Repositories
         public int FindMaxIDCar()
         {
             UpdateDataIfNotExist();
-            var id = _entities.OrderByDescending(x => x.ID).FirstOrDefault();
-            if (id == null)
-            {
-                return 0;
-            }
-            else
-            {
-                return id.ID;
+            var id = _entities.Select(x => x.ID);
+            return id.Any() ? id.Max() : 0;
 
-            }
 
-            
         }
 
         public void RemoveByCarNumber(string number)
