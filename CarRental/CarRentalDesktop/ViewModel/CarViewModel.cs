@@ -1,5 +1,7 @@
 ﻿
 
+using CarRentalDesktop.Annotations;
+
 namespace CarRentalDesktop.ViewModel
 {
     public class CarViewModel:BaseViewModel
@@ -19,6 +21,7 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
+        
         public string Number
         {
             get => _number;

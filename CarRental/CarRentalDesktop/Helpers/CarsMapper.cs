@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using CarRentalCore.Model;
-using CarRentalDesktop.Annotations;
 
 namespace CarRentalDesktop.ViewModel
 {
@@ -23,6 +21,11 @@ namespace CarRentalDesktop.ViewModel
         }
         public Car ToCar(CarViewModel vmCar)
         {
+            if (string.IsNullOrEmpty(vmCar.Color))
+            {
+                throw new Exception("Длинная длинна слишком коротка");
+            }
+            
             return new Car()
             {
                 Number = vmCar.Number,

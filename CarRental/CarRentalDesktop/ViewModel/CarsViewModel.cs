@@ -1,4 +1,5 @@
-﻿using CarRentalCore.Model;
+﻿using System;
+using CarRentalCore.Model;
 using CarRentalCore.Providers;
 using CarRentalCore.Repositories;
 using CarRentalDesktop.Helpers;
@@ -8,29 +9,35 @@ using System.Windows;
 
 namespace CarRentalDesktop.ViewModel
 {
-    public class CarsViewModel: BaseTab
+    public class CarsViewModel : BaseTab
     {
-        
         private CarViewModel _selectedCar;
-        private CarViewModel _currentCar;
-        private ObservableCollection<CarViewModel> _list = new ObservableCollection<CarViewModel>();
+        private CarViewModel _currentCar = new CarViewModel();
+        private ObservableCollection<CarViewModel> _cars = new ObservableCollection<CarViewModel>();
+
         public CarsViewModel()
         {
-            AddNewCar = new RelayCommand(AddNew, AddNew => SelectedCar == null);
-            RemoveCar = new RelayCommand(Remove, RemoveCar => SelectedCar != null);
-            Clear = new RelayCommand(ClearCar);
-            SaveCar = new RelayCommand(Save, SaveCar => SelectedCar != null);
+            AddNewCarCommand = new RelayCommand(AddNewExecute, addNew => SelectedCar == null);
+            RemoveCarCommand = new RelayCommand(RemoveExecute, removeCar => SelectedCar != null);
+            ClearCommand = new RelayCommand(ClearCarExecute);
+            SaveCarCommand = new RelayCommand(SaveExecute, saveCar => SelectedCar != null);
             CarRepository = new CarsRepository(new JsonProvider<Car>("cars.json"));
             UpdateCars();
         }
+
         public ObservableCollection<CarViewModel> Cars
         {
-            get => _list;
-
-            set { _list = value; OnPropertyChanged(); }
+            get => _cars;
+            set
+            {
+                _cars = value;
+                OnPropertyChanged();
+            }
         }
+
         public CarsRepository CarRepository { get; set; }
-        public CarsMapper CarVM { get; set; } = new CarsMapper();
+        public CarsMapper CarMapper { get; set; } = new CarsMapper();
+
         public CarViewModel SelectedCar
         {
             get => _selectedCar;
@@ -41,10 +48,11 @@ namespace CarRentalDesktop.ViewModel
                 {
                     CurrentCar = SelectedCar;
                 }
-                
+
                 OnPropertyChanged();
             }
         }
+
         public CarViewModel CurrentCar
         {
             get => _currentCar;
@@ -54,79 +62,76 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public RelayCommand AddNewCar { get; set; }
-        public RelayCommand RemoveCar { get; set; }
-        public RelayCommand Clear { get; set; }
-        public RelayCommand SaveCar { get; set; }
+
+        public RelayCommand AddNewCarCommand { get; set; }
+        public RelayCommand RemoveCarCommand { get; set; }
+        public RelayCommand ClearCommand { get; set; }
+        public RelayCommand SaveCarCommand { get; set; }
+
+        public override string Header => "Cars";
+
         private void UpdateCars()
         {
-            Cars = new ObservableCollection<CarViewModel>(CarVM.ToViewModel(CarRepository.GetAll()).OrderBy(x => x.ID));
+            Cars = new ObservableCollection<CarViewModel>(CarMapper.ToViewModel(CarRepository.GetAll())
+                .OrderBy(x => x.ID));
         }
-       
-        private void AddNew(object arg)
-        {
-            /*if (DayPrice <= 0)
-            {
-                MessageBox.Show("Цена аренды должна быть >0");
-            }
-            else
-            {
 
-                var car = new CarViewModel() 
-                { 
-                    Number = Number, 
-                    Model = Model, 
-                    Color = Color, 
-                    DateRelease = DateRelease, 
-                    DayPrice = DayPrice, 
-                    ID = CarRepository.FindMaxIDCar() + 1 };
-                Cars.Add(car);
-                ClearFields();
-                CarRepository.Add(CarVM.ToCar(car));
-            }*/
+        private void AddNewExecute(object arg)
+        {
+            CurrentCar.ID = CarRepository.FindMaxIDCar() + 1;
+            try
+            {
+                CarRepository.Add(CarMapper.ToCar(CurrentCar));
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            
+            UpdateCars();
+            ClearFields();
         }
 
         private void ClearFields()
         {
-            CurrentCar.Number = string.Empty;
-            CurrentCar.Color = string.Empty;
-            CurrentCar.Model = string.Empty;
-            CurrentCar.DateRelease = string.Empty;
-            CurrentCar.DayPrice = 0;
+            CurrentCar = new CarViewModel();
         }
 
-        private void Remove(object arg)
+        private void RemoveExecute(object arg)
         {
             if (SelectedCar == null)
             {
                 return;
             }
-            CarRepository.RemoveById(CarVM.ToCar(SelectedCar).ID);
+
+            CarRepository.RemoveById(SelectedCar.ID);
             ClearFields();
             UpdateCars();
         }
-        private void Save(object arg)
+
+        private void SaveExecute(object arg)
         {
             if (SelectedCar == null)
             {
-                return; 
+                return;
             }
+
             if (CurrentCar.DayPrice <= 0)
             {
-                MessageBox.Show("Цена аренды должна быть >0");
+                MessageBox.Show("Цена аренды должна быть > 0");
             }
             else
             {
-                CarRepository.EditById(SelectedCar.ID, CarVM.ToCar(CurrentCar));
+                CarRepository.EditById(SelectedCar.ID, CarMapper.ToCar(CurrentCar));
                 ClearFields();
                 UpdateCars();
             }
         }
-        private void ClearCar(object arg)
+
+        private void ClearCarExecute(object arg)
         {
             ClearFields();
             SelectedCar = null;
         }
-        public override string Header => "Cars";
     }
 }

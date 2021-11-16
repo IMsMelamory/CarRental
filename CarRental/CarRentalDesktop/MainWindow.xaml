@@ -9,403 +9,298 @@
         d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
         Title="CarRentalClient">
     <Window.Resources>
-        <Style TargetType ="{x:Type DataGridColumnHeader}">
-            <Setter Property="Background" Value="DarkGray" />
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        </Style>
-        <Style x:Key="ButtonDelete"
-               TargetType ="{x:Type Button}">
-            <Setter Property="Background" Value="Red" />
-            <Setter Property="Height" Value="30" />
-        </Style>
-        <Style x:Key="ButtonAddSave"
-               TargetType ="{x:Type Button}">
-            <Setter Property="Background" Value="LightBlue" />
-            <Setter Property="Height" Value="30" />
-        </Style>
-        <Style x:Key="ButtonClear"
-               TargetType ="{x:Type Button}">
-            <Setter Property="Width" Value="16" />
-            <Setter Property="Height" Value="16"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-        </Style>
-        <DataTemplate DataType="{x:Type viewModel:CarsViewModel}">
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <DataGrid Grid.Column="0" 
-                          ItemsSource="{Binding Cars}"
-                          SelectedItem="{Binding SelectedCar}"  
-                          AutoGenerateColumns="False" 
-                          CanUserAddRows="False"
-                          CanUserReorderColumns="False"
-                          ColumnWidth="*">
-                    <DataGrid.Columns >
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = Number,  UpdateSourceTrigger=PropertyChanged}" 
-                                             Header="Номер"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = Model}" 
-                                             Header="Модель"/>
-                        <DataGridTextColumn   IsReadOnly="True" 
-                                              Binding="{Binding Path = Color }" 
-                                              Header="Цвет"/>
-                        <DataGridTextColumn   IsReadOnly="True" 
-                                              Binding="{Binding Path = DateRelease}" 
-                                              Header="Год выпуска"/>
-                        <DataGridTextColumn   IsReadOnly="True" 
-                                              Binding="{Binding Path = DayPrice }" 
-                                              Header="Цена\сутки"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-                <GridSplitter Grid.Column="0" Width="3" />
-                <Grid Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="1" Grid.Column="0" ColumnSpan="2" >
-                        <StackPanel Orientation="Vertical" 
-                            Margin="5">
-                            <TextBlock Text="Номер" />
-                            <TextBox  MaxLength="20" 
-                                      Text="{Binding CurrentCar.Number, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Text="Модель" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentCar.Model,  UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Text="Цвет" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentCar.Color,  UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Text="Год выпуска" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentCar.DateRelease,  UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Text="Цена аренды за день" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentCar.DayPrice,  UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                    </Grid>
-                    <Button Grid.Row="0"
-                            Grid.Column="1"  
-                            Style="{StaticResource ButtonClear}"
-                            Command="{Binding Path=Clear}">
-                        <Image Source="pack://application:,,,/image/clear.jpg"/>
-                    </Button>
-                    <Button Grid.Row="2"
-                            Grid.Column="0"  
-                            Style="{StaticResource ButtonAddSave}"
-                            Command="{Binding Path=AddNewCar}"
-                            Content="Добавить"  />
-                    <Button Grid.Row="2" 
-                            Grid.Column="1" 
-                            Style="{StaticResource ButtonDelete}"
-                            Command="{Binding Path=RemoveCar}" 
-                            CommandParameter="{Binding SelectedCar}" 
-                            Content="Удалить"/>
-                    <Button Grid.Row="3" 
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            Style="{StaticResource ButtonAddSave}"
-                            Command="{Binding Path=SaveCar}" 
-                            CommandParameter="{Binding SelectedCar}" 
-                            Content="Сохранить"/>
-                </Grid>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate  DataType="{x:Type viewModel:ClientsViewModel}">
+        <DataTemplate DataType="{x:Type viewModel:ClientsViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <DataGrid Grid.Column="0" 
+                <DataGrid Grid.Column="0"
                           ItemsSource="{Binding Path = Clients}"
-                          SelectedItem="{Binding Path = SelectedClient}"  
+                          SelectedItem="{Binding Path = SelectedClient}"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           ColumnWidth="*">
-                    <DataGrid.Columns >
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                                             Header="Имя"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                                             Header="Фамилия"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                                             Header="Отчество"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                                             Header="Дата рождения"/>
-                        <DataGridTextColumn IsReadOnly="True"  
-                                            Binding="{Binding Path = NumberDriversLicence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                                            Header="Номер водительского удостоверения"/>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Header="Имя" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Header="Фамилия" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Header="Отчество" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Header="Дата рождения" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = NumberDriversLicence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                            Header="Номер водительского удостоверения" />
                     </DataGrid.Columns>
                 </DataGrid>
                 <GridSplitter Grid.Column="0" Width="3" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="1" 
-                          Grid.Column="0" 
-                          ColumnSpan="2" >
-                        <StackPanel 
-                                    Orientation="Vertical" 
-                                    Margin="5">
-                            <TextBlock  Text="Имя" />
-                            <TextBox  MaxLength="20"  Text ="{Binding CurrentClient.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                            <TextBlock Text="Фамилия" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentClient.LastName,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                            <TextBlock Text="Отчество" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentClient.SecondLastName,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                            <TextBlock Text="Дата рождения" />
-                            <DatePicker  Text="{Binding CurrentClient.BDay,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}" />
-                            <TextBlock Text="Номер водительского удостоверения" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentClient.NumberDriversLicence, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Text="Фамилия менеджера" />
-                            <ComboBox ItemsSource="{Binding ManagerVM.Managers,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                      SelectedValuePath="ID"
-                                      SelectedValue="{Binding SelectedClient.ManagerID, UpdateSourceTrigger=PropertyChanged}"
-                                      DisplayMemberPath="Name"
-                                      Text="Please Select"/>
-                        </StackPanel>
-                    </Grid>
-                    <Button Grid.Row="0"
-                            Grid.Column="1"  
-                            Style="{StaticResource ButtonClear}"
-                            Command="{Binding Path=Clear}">
-                        <Image Source="pack://application:,,,/image/clear.jpg"/>
-                    </Button>
-                    <Button Grid.Row="2"
-                            Grid.Column="0"  
-                            Style="{StaticResource ButtonAddSave}"
-                            Command="{Binding Path=AddNewClient}"
-                            Content="Добавить"  />
-                    <Button Grid.Row="2" 
-                            Grid.Column="1" 
-                            Style="{StaticResource ButtonDelete}"
-                            Command="{Binding Path=RemoveClient}" 
-                            CommandParameter="{Binding SelectedClient}" 
-                            Content="Удалить"/>
-                    <Button Grid.Row="3" 
-                            Grid.Column="0"
-                            Grid.ColumnSpan="2"
-                            Style="{StaticResource ButtonAddSave}"
-                            Command="{Binding Path=SaveClient}" 
-                            CommandParameter="{Binding SelectedClient}" 
-                            Content="Сохранить"/>
-                </Grid>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate  DataType="{x:Type viewModel:ManagersViewModel}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <DataGrid Grid.Column="0"  
-                          ItemsSource="{Binding Path = Managers}" 
-                          SelectedItem="{Binding Path=SelectedManager}"  
-                          AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          ColumnWidth="*">
-                    <DataGrid.Columns >
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged}" 
-                                             Header="Имя"/>
-                        <DataGridTextColumn  IsReadOnly="True"
-                                             Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
-                                             Header="Фамилия"/>
-                        <DataGridTextColumn  IsReadOnly="True"
-                                             Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" 
-                                             Header="Отчество"/>
-                        <DataGridTextColumn  IsReadOnly="True"
-                                             Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
-                                             Header="Дата рождения"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-                        <GridSplitter Grid.Column="0" Width="3" />
-                <Grid Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="1" Grid.Column="0" ColumnSpan="2" >
-                        <StackPanel Orientation="Vertical" 
+                    <Grid Grid.Row="1"
+                          Grid.Column="0"
+                          ColumnSpan="2">
+                        <StackPanel
+                            Orientation="Vertical"
                             Margin="5">
                             <TextBlock Text="Имя" />
-                            <TextBox  MaxLength="20" 
-                                      Text="{Binding CurrentManager.Name, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            <TextBox MaxLength="20"
+                                     Text="{Binding CurrentClient.Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             <TextBlock Text="Фамилия" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentManager.LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            <TextBox MaxLength="20"
+                                     Text="{Binding CurrentClient.LastName,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             <TextBlock Text="Отчество" />
-                            <TextBox MaxLength="20" 
-                                     Text="{Binding CurrentManager.SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            <TextBox MaxLength="20"
+                                     Text="{Binding CurrentClient.SecondLastName,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                             <TextBlock Text="Дата рождения" />
-                            <DatePicker  Text="{Binding CurrentManager.BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat = dd-MM-yyyy}" />
+                            <DatePicker
+                                Text="{Binding CurrentClient.BDay,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}" />
+                            <TextBlock Text="Номер водительского удостоверения" />
+                            <TextBox MaxLength="20"
+                                     Text="{Binding CurrentClient.NumberDriversLicence, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="Фамилия менеджера" />
+                            <ComboBox
+                                ItemsSource="{Binding ManagerVM.Managers,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                SelectedValuePath="ID"
+                                SelectedValue="{Binding SelectedClient.ManagerID, UpdateSourceTrigger=PropertyChanged}"
+                                DisplayMemberPath="Name"
+                                Text="Please Select" />
                         </StackPanel>
                     </Grid>
                     <Button Grid.Row="0"
-                            Grid.Column="1"  
+                            Grid.Column="1"
                             Style="{StaticResource ButtonClear}"
                             Command="{Binding Path=Clear}">
-                        <Image Source="pack://application:,,,/image/clear.jpg"/>
+                        <Image Source="pack://application:,,,/image/clear.jpg" />
                     </Button>
                     <Button Grid.Row="2"
-                            Grid.Column="0"  
+                            Grid.Column="0"
                             Style="{StaticResource ButtonAddSave}"
-                            Command="{Binding Path=AddNewManager}"
-                            Content="Добавить"  />
-                    <Button Grid.Row="2" 
-                            Grid.Column="1" 
+                            Command="{Binding Path=AddNewClient}"
+                            Content="Добавить" />
+                    <Button Grid.Row="2"
+                            Grid.Column="1"
                             Style="{StaticResource ButtonDelete}"
-                            Command="{Binding Path=RemoveManager}" 
-                            CommandParameter="Удалить" 
-                            Content="Удалить"/>
-                    <Button Grid.Row="3" 
+                            Command="{Binding Path=RemoveClient}"
+                            CommandParameter="{Binding SelectedClient}"
+                            Content="Удалить" />
+                    <Button Grid.Row="3"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Style="{StaticResource ButtonAddSave}"
-                            Command="{Binding Path=SaveManager}" 
-                            CommandParameter="{Binding SelectedManager}" 
-                            Content="Сохранить"/>
+                            Command="{Binding Path=SaveClient}"
+                            CommandParameter="{Binding SelectedClient}"
+                            Content="Сохранить" />
                 </Grid>
             </Grid>
         </DataTemplate>
-        <DataTemplate  DataType="{x:Type viewModel:RentsViewModel}">
+        <DataTemplate DataType="{x:Type viewModel:ManagersViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <DataGrid Grid.Column="0"  
-                          ItemsSource="{Binding Rents}"          
-                          SelectedItem="{Binding SelectedRent}"  
+                <DataGrid Grid.Column="0"
+                          ItemsSource="{Binding Path = Managers}"
+                          SelectedItem="{Binding Path=SelectedManager}"
                           AutoGenerateColumns="False"
                           CanUserAddRows="False"
                           ColumnWidth="*">
-                    <DataGrid.Columns >
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = ClientNumberLicense, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" 
-                                             Header="Номер водительского удостоверения"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = CarNumber, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" 
-                                             Header="Номер машины"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = StartRent, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" 
-                                             Header="Дата начала аренды"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = EndRent, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
-                                             Header="Дата окончания аренды"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = DayRentCount, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }" 
-                                             Header="Количество дней аренды"/>
-                        <DataGridTextColumn  IsReadOnly="True" 
-                                             Binding="{Binding Path = Fine, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" 
-                                             Header="Пеня"/>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged}"
+                                            Header="Имя" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}"
+                                            Header="Фамилия" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }"
+                                            Header="Отчество" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = BDay, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}"
+                                            Header="Дата рождения" />
                     </DataGrid.Columns>
                 </DataGrid>
                 <GridSplitter Grid.Column="0" Width="3" />
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="1" Grid.Column="0" ColumnSpan="2" >
-                        <StackPanel Orientation="Vertical" 
+                    <Grid Grid.Row="1" Grid.Column="0" ColumnSpan="2">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="5">
+                            <TextBlock Text="Имя" />
+                            <TextBox MaxLength="20"
+                                     Text="{Binding CurrentManager.Name, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            <TextBlock Text="Фамилия" />
+                            <TextBox MaxLength="20"
+                                     Text="{Binding CurrentManager.LastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            <TextBlock Text="Отчество" />
+                            <TextBox MaxLength="20"
+                                     Text="{Binding CurrentManager.SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
+                            <TextBlock Text="Дата рождения" />
+                            <DatePicker
+                                Text="{Binding CurrentManager.BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat = dd-MM-yyyy}" />
+                        </StackPanel>
+                    </Grid>
+                    <Button Grid.Row="0"
+                            Grid.Column="1"
+                            Style="{StaticResource ButtonClear}"
+                            Command="{Binding Path=Clear}">
+                        <Image Source="pack://application:,,,/image/clear.jpg" />
+                    </Button>
+                    <Button Grid.Row="2"
+                            Grid.Column="0"
+                            Style="{StaticResource ButtonAddSave}"
+                            Command="{Binding Path=AddNewManager}"
+                            Content="Добавить" />
+                    <Button Grid.Row="2"
+                            Grid.Column="1"
+                            Style="{StaticResource ButtonDelete}"
+                            Command="{Binding Path=RemoveManager}"
+                            CommandParameter="Удалить"
+                            Content="Удалить" />
+                    <Button Grid.Row="3"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Style="{StaticResource ButtonAddSave}"
+                            Command="{Binding Path=SaveManager}"
+                            CommandParameter="{Binding SelectedManager}"
+                            Content="Сохранить" />
+                </Grid>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:RentsViewModel}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <DataGrid Grid.Column="0"
+                          ItemsSource="{Binding Rents}"
+                          SelectedItem="{Binding SelectedRent}"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          ColumnWidth="*">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = ClientNumberLicense, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                            Header="Номер водительского удостоверения" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = CarNumber, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                            Header="Номер машины" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = StartRent, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                                            Header="Дата начала аренды" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = EndRent, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}"
+                                            Header="Дата окончания аренды" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = DayRentCount, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay }"
+                                            Header="Количество дней аренды" />
+                        <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = Fine, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}"
+                                            Header="Пеня" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <GridSplitter Grid.Column="0" Width="3" />
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1" Grid.Column="0" ColumnSpan="2">
+                        <StackPanel Orientation="Vertical"
                                     Margin="5">
                             <TextBlock Text="Номер водительского удостоверения" />
                             <ComboBox ItemsSource="{Binding ClientsVM.Clients, UpdateSourceTrigger=PropertyChanged}"
                                       SelectedValuePath="NumberDriversLicence"
                                       SelectedValue="{Binding CurrentRent.ClientNumberLicense, UpdateSourceTrigger=PropertyChanged}"
-                                      DisplayMemberPath="NumberDriversLicence"/>
+                                      DisplayMemberPath="NumberDriversLicence" />
                             <TextBlock Text="Номер машины" />
-                            <ComboBox ItemsSource="{Binding CarsVM.Cars, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, Mode=TwoWay}"
-                                      SelectedValuePath="Number"
-                                      SelectedValue="{Binding CurrentRent.CarNumber, UpdateSourceTrigger=PropertyChanged}"
-                                      DisplayMemberPath="Number"/>
+                            <ComboBox
+                                ItemsSource="{Binding CarsVM.Cars, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, Mode=TwoWay}"
+                                SelectedValuePath="Number"
+                                SelectedValue="{Binding CurrentRent.CarNumber, UpdateSourceTrigger=PropertyChanged}"
+                                DisplayMemberPath="Number" />
                             <TextBlock Text="Дата начала аренды" />
-                            <DatePicker  Text="{Binding CurrentRent.StartRent,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}"
-                                         SelectedDate="{x:Static sys:DateTime.Now}" />
+                            <DatePicker
+                                Text="{Binding CurrentRent.StartRent,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}"
+                                SelectedDate="{x:Static sys:DateTime.Now}" />
                             <TextBlock Text="Дата окончания аренды" />
-                            <DatePicker  Text="{Binding CurrentRent.EndRent,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}" />
+                            <DatePicker
+                                Text="{Binding CurrentRent.EndRent,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}" />
                             <TextBlock Text="Количество дней аренды" />
-                            <TextBox MaxLength="20" 
+                            <TextBox MaxLength="20"
                                      Text="{Binding CurrentRent.DayRentCount,  UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Text="Пеня" />
-                            <TextBox MaxLength="20" 
-                                     IsReadOnly="True" 
+                            <TextBox MaxLength="20"
+                                     IsReadOnly="True"
                                      Text="{Binding CurrentRent.Fine,  UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
                     </Grid>
                     <Button Grid.Row="0"
-                            Grid.Column="1"  
+                            Grid.Column="1"
                             Style="{StaticResource ButtonClear}"
                             Command="{Binding Path=Clear}">
-                        <Image Source="pack://application:,,,/image/clear.jpg"/>
+                        <Image Source="pack://application:,,,/image/clear.jpg" />
                     </Button>
                     <Button Grid.Row="2"
-                            Grid.Column="0"  
+                            Grid.Column="0"
                             Style="{StaticResource ButtonAddSave}"
                             Command="{Binding Path= AddNew}"
-                            Content="Оформить аренду"  />
-                    <Button Grid.Row="2" 
-                            Grid.Column="1" 
+                            Content="Оформить аренду" />
+                    <Button Grid.Row="2"
+                            Grid.Column="1"
                             Style="{StaticResource ButtonDelete}"
-                            Command="{Binding Path=Remove}" 
-                            CommandParameter="{Binding SelectedRent}" 
-                            Content="Удалить"/>
-                    <Button Grid.Row="3" 
+                            Command="{Binding Path=Remove}"
+                            CommandParameter="{Binding SelectedRent}"
+                            Content="Удалить" />
+                    <Button Grid.Row="3"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             Style="{StaticResource ButtonAddSave}"
-                            Command="{Binding Path=Return}" 
-                            CommandParameter="{Binding SelectedRent}" 
-                            Content="Вернуть машину"/>
+                            Command="{Binding Path=Return}"
+                            CommandParameter="{Binding SelectedRent}"
+                            Content="Вернуть машину" />
                 </Grid>
             </Grid>
         </DataTemplate>
     </Window.Resources>
-    <TabControl ItemsSource="{Binding Tab}" 
+    <TabControl x:Name="TabControl" ItemsSource="{Binding Tab}"
                 SelectedIndex="0">
         <TabControl.ItemTemplate>
             <DataTemplate>
-                <TextBlock Text="{Binding Header}" 
-                           HorizontalAlignment="Center" 
-                           VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Header}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
             </DataTemplate>
         </TabControl.ItemTemplate>
     </TabControl>
