@@ -18,10 +18,10 @@ namespace CarRentalDesktop.ViewModel
         {
             ClientsVM = clientsVM;
             CarsVM = carsVM;
-            AddNew = new RelayCommand(AddNewRent, AddNewRent => SelectedRent == null);
-            Remove = new RelayCommand(RemoveRent, RemoveRent => SelectedRent != null);
-            Return = new RelayCommand(ReturnRent, ReturnRent => SelectedRent != null);
-            Clear = new RelayCommand(ClearRent);
+            AddNewCommand = new RelayCommand(AddNewRentExecute, AddNewRent => SelectedRent == null);
+            RemoveCommand = new RelayCommand(RemoveRentExecute, RemoveRent => SelectedRent != null);
+            ReturnCommand = new RelayCommand(ReturnRentExecute, ReturnRent => SelectedRent != null);
+            ClearCommand = new RelayCommand(ClearRentExecute);
             RentsRepository = new RentsRepository(new JsonProvider<Rent>("rents.json"));
             UpdateRents();
 
@@ -40,24 +40,25 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public RelayCommand AddNew { get; set; }
-        public RelayCommand Remove { get; set; }
-        public RelayCommand Return { get; set; }
-        public RelayCommand Clear { get; set; }
+        public RelayCommand AddNewCommand { get; set; }
+        public RelayCommand RemoveCommand { get; set; }
+        public RelayCommand ReturnCommand { get; set; }
+        public RelayCommand ClearCommand { get; set; }
         private void UpdateRents()
         {
             Rents = new ObservableCollection<RentViewModel>(RentMap.ToViewModel(RentsRepository.GetAll()));
         }
-        private void AddNewRent(object arg)
+        private void AddNewRentExecute(object arg)
         {
-           /* if (DayRentCount <= 0)
+           if (CurrentRent.DayRentCount <= 0)
             {
                 MessageBox.Show("Количество дней аренды должно быть >0");
             }
             else
             {
-                var rent = new RentViewModel()
+               /* var rent = new RentViewModel()
                 {
+                    CurrentRent.ID
                     ClientNumberLicense = ClientNumberLicense,
                     CarNumber = CarNumber,
                     StartRent = StartRent,
@@ -67,10 +68,10 @@ namespace CarRentalDesktop.ViewModel
                 };
                 Rents.Add(rent);
                 ClearFields();
-                RentsRepository.Add(RentMap.ToRent(rent));
-                }*/
+                RentsRepository.Add(RentMap.ToRent(rent));*/
+            }
         }
-        private void ReturnRent(object arg)
+        private void ReturnRentExecute(object arg)
         {
                 if (SelectedRent != null)
                 {
@@ -106,7 +107,7 @@ namespace CarRentalDesktop.ViewModel
             CurrentRent.DayRentCount = 0;
 
         }
-        private void RemoveRent(object arg)
+        private void RemoveRentExecute(object arg)
         {
             if (SelectedRent == null)
             {
@@ -117,7 +118,7 @@ namespace CarRentalDesktop.ViewModel
             UpdateRents();
         }
 
-        private void ClearRent(object arg)
+        private void ClearRentExecute(object arg)
          {
              if (SelectedRent == null)
              {

@@ -12,16 +12,17 @@ namespace CarRentalDesktop.ViewModel
     public class ClientsViewModel :BaseTab
 
     {
+        public override string Header => "Clients";
         private ClientViewModel _selectedClient;
-        private ClientViewModel _currentClient;
+        private ClientViewModel _currentClient = new ClientViewModel();
         private ObservableCollection<ClientViewModel> _clients;
         public ClientsViewModel(ManagersViewModel managerVM)
         {
             ManagerVM = managerVM;
-            AddNewClient = new RelayCommand(AddNew);
-            RemoveClient = new RelayCommand(Remove, RemoveClient => SelectedClient != null);
-            SaveClient = new RelayCommand(Save, SaveClient => SelectedClient != null);
-            Clear = new RelayCommand(ClearClient);
+            AddNewClientCommand = new RelayCommand(AddNewExecute);
+            RemoveClientCommand = new RelayCommand(RemoveExecute, RemoveClient => SelectedClient != null);
+            SaveClientCommand = new RelayCommand(SaveExecute, SaveClient => SelectedClient != null);
+            ClearCommand = new RelayCommand(ClearClientExecute);
             ClientsRepository = new ClientsRepository(new JsonProvider<Client>("clients.json"));
             UpdateClients();
         }
@@ -58,37 +59,28 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public RelayCommand AddNewClient { get; set; }
-        public RelayCommand RemoveClient { get; set; }
-        public RelayCommand Clear { get; set; }
-        public RelayCommand SaveClient { get; set; }
+        public RelayCommand AddNewClientCommand { get; set; }
+        public RelayCommand RemoveClientCommand { get; set; }
+        public RelayCommand ClearCommand { get; set; }
+        public RelayCommand SaveClientCommand { get; set; }
         private void UpdateClients()
         {
             Clients = new ObservableCollection<ClientViewModel>(ClientMap.ToViewModel(ClientsRepository.GetAll()).OrderBy(x => x.ID));
         }
-        private void AddNew(object arg)
+        private void AddNewExecute(object arg)
         {
-            CurrentClient = new ClientViewModel();
-            //SelectedClient = new ClientViewModel();
-            /*var client = new ClientViewModel()
-            {
-                Name = CurrentClient.Name,
-                LastName = CurrentClient.LastName,
-                SecondLastName = CurrentClient.SecondLastName,
-                BDay = CurrentClient.BDay,
-                ID = 0
-            };*/
+            CurrentClient.ID = ClientsRepository.FindMaxIDClient() + 1;
             ClientsRepository.Add(ClientMap.ToClient(CurrentClient));
-            //ClearFields();
+            ClearFields();
             UpdateClients();
         }
 
         private void ClearFields()
         {
-            SelectedClient = null;
+            SelectedClient = new ClientViewModel();
         }
 
-        private void Remove(object arg)
+        private void RemoveExecute(object arg)
         {
             
             ClientsRepository.RemoveById(ClientMap.ToClient(SelectedClient).ID);
@@ -97,7 +89,7 @@ namespace CarRentalDesktop.ViewModel
                 
 
         }
-        private void Save(object arg)
+        private void SaveExecute(object arg)
         {
             if (SelectedClient == null)
             {
@@ -108,10 +100,10 @@ namespace CarRentalDesktop.ViewModel
             UpdateClients();
         }
 
-        private void ClearClient(object arg)
+        private void ClearClientExecute(object arg)
          {
-                 ClearFields();
+            ClearFields();
          }
-        public override string Header => "Clients";
+       
     }
 }

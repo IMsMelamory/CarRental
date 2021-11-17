@@ -11,15 +11,16 @@ namespace CarRentalDesktop.ViewModel
 {
     public class ManagersViewModel : BaseTab
     {
+        public override string Header => "Managers";
         private ManagerViewModel _selectedManager;
-        private ManagerViewModel _currentManager;
+        private ManagerViewModel _currentManager = new ManagerViewModel();
 
         public ManagersViewModel()
         {
-            AddNewManager = new RelayCommand(AddNew, AddNew=> SelectedManager == null);
-            RemoveManager = new RelayCommand(Remove, Remove=> SelectedManager != null);
-            SaveManager = new RelayCommand(Save, Save => SelectedManager != null);
-            Clear = new RelayCommand(ClearManager);
+            AddNewManagerCommand = new RelayCommand(AddNewExecute, AddNew=> SelectedManager == null);
+            RemoveManagerCommand = new RelayCommand(RemoveExecute, Remove=> SelectedManager != null);
+            SaveManagerCommand = new RelayCommand(SaveExecute, Save => SelectedManager != null);
+            ClearCommand = new RelayCommand(ClearManagerExecute);
             ManagersRepository = new ManagersRepository(new JsonProvider<Manager>("managers.json"));
             UpdateManagers();
         }
@@ -49,39 +50,29 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
-        public RelayCommand AddNewManager { get; set; }
-        public RelayCommand RemoveManager { get; set; }
-        public RelayCommand Clear { get; set; }
-        public RelayCommand SaveManager { get; set; }
+        public RelayCommand AddNewManagerCommand { get; set; }
+        public RelayCommand RemoveManagerCommand { get; set; }
+        public RelayCommand ClearCommand { get; set; }
+        public RelayCommand SaveManagerCommand { get; set; }
         private void UpdateManagers()
         {
             Managers = new ObservableCollection<ManagerViewModel>(ManagerMap.ToViewModel(ManagersRepository.GetAll()).OrderBy(x => x.ID));
         }
-        private void AddNew(object arg)
+        private void AddNewExecute(object arg)
         {
-          /* var manager = new ManagerViewModel()
-           {
-                Name = Name,
-                LastName = LastName,
-                SecondLastName = SecondLastName,
-                BDay = BDay,
-                ID = ManagersRepository.FindMaxIDManagers() + 1,
-            };
-           ManagersRepository.Add(ManagerMap.ToManager(manager));
+           CurrentManager.ID = ManagersRepository.FindMaxIDManagers() + 1;
+           ManagersRepository.Add(ManagerMap.ToManager(CurrentManager));
            UpdateManagers();
-           ClearFields();*/
+           ClearFields();
 
         }
 
         private void ClearFields()
         {
-            CurrentManager.Name = string.Empty;
-            CurrentManager.LastName = string.Empty;
-            CurrentManager.SecondLastName = string.Empty;
-            CurrentManager.BDay = DateTime.MinValue;
+            CurrentManager = new ManagerViewModel();
         }
 
-        private void Remove(object arg)
+        private void RemoveExecute(object arg)
         {
             if (SelectedManager == null)
             {
@@ -91,7 +82,7 @@ namespace CarRentalDesktop.ViewModel
             ClearFields();
             UpdateManagers();
         }
-        private void Save(object arg)
+        private void SaveExecute(object arg)
         {
             if (SelectedManager == null)
             {
@@ -102,7 +93,7 @@ namespace CarRentalDesktop.ViewModel
             ClearFields();
             
         }
-        private void ClearManager(object arg)
+        private void ClearManagerExecute(object arg)
          {
             if (SelectedManager == null)
             {
@@ -111,6 +102,5 @@ namespace CarRentalDesktop.ViewModel
             ClearFields();
             SelectedManager = null;
          }
-        public override string Header => "Managers";
     }
 }
