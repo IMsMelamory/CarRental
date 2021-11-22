@@ -25,19 +25,49 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True"
                                         Binding="{Binding Path = Number,  UpdateSourceTrigger=PropertyChanged}"
-                                        Header="Номер" />
+                                        Header="Номер">
+                    <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding Number}" />
+                            </Style>
+                    </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn IsReadOnly="True"
                                         Binding="{Binding Path = Model}"
-                                        Header="Модель" />
+                                        Header="Модель" >
+                    <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}" >
+                                <Setter Property="ToolTip" Value="{Binding Model}" />
+                            </Style>
+                    </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn IsReadOnly="True"
                                         Binding="{Binding Path = Color }"
-                                        Header="Цвет" />
+                                        Header="Цвет">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                           <Setter Property="ToolTip" Value="{Binding Color}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn IsReadOnly="True"
                                         Binding="{Binding Path = DateRelease}"
-                                        Header="Год выпуска" />
+                                        Header="Год выпуска" >
+                    <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                 <Setter Property="ToolTip" Value="{Binding DateRelease}" />
+                            </Style>
+                    </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                     <DataGridTextColumn IsReadOnly="True"
-                                        Binding="{Binding Path = DayPrice }"
-                                        Header="Цена\сутки" />
+                                        Binding="{Binding Path = DayPrice}"
+                                        Header="Цена\сутки" >
+                    <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding DayPrice}" />
+                             </Style>
+                    </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <GridSplitter Grid.Column="0" Width="3" />

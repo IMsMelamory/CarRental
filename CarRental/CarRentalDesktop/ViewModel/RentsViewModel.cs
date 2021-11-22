@@ -12,7 +12,7 @@ namespace CarRentalDesktop.ViewModel
     public class RentsViewModel: BaseTab
     {
         private RentViewModel _selectedRent;
-        private RentViewModel _currentRent;
+        private RentViewModel _currentRent = new RentViewModel();
 
         public RentsViewModel(ClientsViewModel clientsVM, CarsViewModel carsVM)
         {
