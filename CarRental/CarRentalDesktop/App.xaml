@@ -7,6 +7,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Views/CarsView.xaml" />
+                <ResourceDictionary Source="../Views/ClientsView.xaml" />
+                <ResourceDictionary Source="../Views/ManagersView.xaml" />
+                <ResourceDictionary Source="../Views/RentsView.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

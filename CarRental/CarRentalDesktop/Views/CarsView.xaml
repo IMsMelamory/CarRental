@@ -4,7 +4,6 @@
                     xmlns:controls="clr-namespace:CarRentalDesktop.Controls"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                     xmlns:behaviors="clr-namespace:CarRentalDesktop.Behaviors">
-
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="GenericResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -21,7 +20,8 @@
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       CanUserReorderColumns="False"
-                      ColumnWidth="*">
+                      ColumnWidth="*"
+                      HeadersVisibility="Column">
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True"
                                         Binding="{Binding Path = Number,  UpdateSourceTrigger=PropertyChanged}"
