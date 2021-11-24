@@ -14,8 +14,18 @@ namespace CarRentalDesktop.ViewModel
        private DateTime _endRent;
        private int _dayRentCount;
        private double _fine;
+        private int _id;
+        public int ID
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
 
-       public string ClientNumberLicense
+        public string ClientNumberLicense
         {
            get => _clientNumderLicense;
            set

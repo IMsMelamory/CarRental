@@ -56,19 +56,10 @@ namespace CarRentalDesktop.ViewModel
             }
             else
             {
-               /* var rent = new RentViewModel()
-                {
-                    CurrentRent.ID
-                    ClientNumberLicense = ClientNumberLicense,
-                    CarNumber = CarNumber,
-                    StartRent = StartRent,
-                    EndRent = DateTime.MinValue,
-                    Fine = 0,
-                    DayRentCount = DayRentCount
-                };
-                Rents.Add(rent);
+                CurrentRent.ID = RentsRepository.FindMaxIDRent() + 1;
+                RentsRepository.Add(RentMap.ToRent(CurrentRent));
                 ClearFields();
-                RentsRepository.Add(RentMap.ToRent(rent));*/
+                UpdateRents();
             }
         }
         private void ReturnRentExecute(object arg)
