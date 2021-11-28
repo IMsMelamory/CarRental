@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace CarRentalCore.Model
@@ -7,6 +8,12 @@ namespace CarRentalCore.Model
     {
         [JsonIgnore]
         public List<Client> Clients { get; set; } = new List<Client>();
+        public DateTime StartWork { get; set; }
+        public DateTime EndWork { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+
+
     }
 
   

@@ -20,8 +20,8 @@
                           HeadersVisibility="Column">
                 <DataGrid.Columns>
                     <DataGridTextColumn IsReadOnly="True"
-                                            Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            Header="Имя">
+                                        Binding="{Binding Path = Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Имя">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
                                 <Setter Property="ToolTip" Value="{Binding Name}" />
@@ -29,8 +29,8 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn IsReadOnly="True"
-                                            Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            Header="Фамилия">
+                                        Binding="{Binding Path = LastName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Фамилия">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
                                 <Setter Property="ToolTip" Value="{Binding LastName}" />
@@ -56,11 +56,38 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <DataGridTextColumn IsReadOnly="True"
-                                            Binding="{Binding Path = NumberDriversLicence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                                            Header="Номер водительского удостоверения">
+                                        Binding="{Binding Path = NumberDriversLicence, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Номер водительского удостоверения">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
                                 <Setter Property="ToolTip" Value="{Binding NumberDriversLicence}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True"
+                                        Binding="{Binding Path = PhoneNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Номер телефона">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding PhoneNumber}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True"
+                                        Binding="{Binding Path = Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Электронная почта">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding Email}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True"
+                                        Binding="{Binding Path = Address, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Адрес">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding Address}" />
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
@@ -99,6 +126,15 @@
                         <TextBlock Text="Номер водительского удостоверения" />
                         <TextBox MaxLength="20"
                                      Text="{Binding CurrentClient.NumberDriversLicence, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Номер телефона" />
+                        <TextBox MaxLength="20"
+                                     Text="{Binding CurrentClient.PhoneNumber, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Электронная почта" />
+                        <TextBox MaxLength="20"
+                                     Text="{Binding CurrentClient.Email, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Адрес" />
+                        <TextBox MaxLength="20"
+                                     Text="{Binding CurrentClient.Address, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="Фамилия менеджера" />
                         <ComboBox
                                 ItemsSource="{Binding ManagerVM.Managers,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"

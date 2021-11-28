@@ -12,6 +12,9 @@ namespace CarRentalDesktop.ViewModel
         private string _lastName;
         private string _secondLastName;
         private DateTime _bDay;
+        private string _phoneNumber;
+        private string _email;
+        private string _address;
         private int _id;
         public int ID
         {
@@ -54,6 +57,33 @@ namespace CarRentalDesktop.ViewModel
             set
             {
                 _bDay = value;
+                OnPropertyChanged();
+            }
+        }
+        public string PhoneNumber
+        {
+            get => _phoneNumber;
+            set
+            {
+                _phoneNumber = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Email
+        {
+            get => _email;
+            set
+            {
+                _email = value;
+                OnPropertyChanged();
+            }
+        }
+        public string Address
+        {
+            get => _address;
+            set
+            {
+                _address = value;
                 OnPropertyChanged();
             }
         }

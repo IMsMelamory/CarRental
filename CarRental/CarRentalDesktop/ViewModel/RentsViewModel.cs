@@ -12,16 +12,17 @@ namespace CarRentalDesktop.ViewModel
     public class RentsViewModel: BaseTab
     {
         private RentViewModel _selectedRent;
-        private RentViewModel _currentRent = new RentViewModel();
+        private RentViewModel _currentRent = new RentViewModel(); 
+        private ObservableCollection<RentViewModel> _rents;
 
         public RentsViewModel(ClientsViewModel clientsVM, CarsViewModel carsVM)
         {
             ClientsVM = clientsVM;
             CarsVM = carsVM;
-            AddNewCommand = new RelayCommand(AddNewRentExecute, AddNewRent => SelectedRent == null);
-            RemoveCommand = new RelayCommand(RemoveRentExecute, RemoveRent => SelectedRent != null);
-            ReturnCommand = new RelayCommand(ReturnRentExecute, ReturnRent => SelectedRent != null);
-            ClearCommand = new RelayCommand(ClearRentExecute);
+            AddNewRentCommand = new RelayCommand(AddNewRentExecute, AddNewRent => SelectedRent == null);
+            RemoveRentCommand = new RelayCommand(RemoveRentExecute, RemoveRent => SelectedRent != null);
+            ReturnRentCommand = new RelayCommand(ReturnRentExecute, ReturnRent => SelectedRent != null);
+            ClearRentCommand = new RelayCommand(ClearRentExecute);
             RentsRepository = new RentsRepository(new JsonProvider<Rent>("rents.json"));
             UpdateRents();
 
@@ -29,7 +30,15 @@ namespace CarRentalDesktop.ViewModel
         public ClientsViewModel ClientsVM { get; set; }
         public CarsViewModel CarsVM { get; set; }
         public RentsRepository RentsRepository { get; set; }
-        public ObservableCollection<RentViewModel> Rents { get; set; }
+        public ObservableCollection<RentViewModel> Rents
+        {
+            get => _rents;
+            set
+            {
+                _rents = value;
+                OnPropertyChanged();
+            }
+        }
         public RentsMapper RentMap { get; set; } = new RentsMapper();
         public RentViewModel CurrentRent
         {
@@ -39,40 +48,6 @@ namespace CarRentalDesktop.ViewModel
                 _currentRent = value;
                 OnPropertyChanged();
             }
-        }
-        public RelayCommand AddNewCommand { get; set; }
-        public RelayCommand RemoveCommand { get; set; }
-        public RelayCommand ReturnCommand { get; set; }
-        public RelayCommand ClearCommand { get; set; }
-        private void UpdateRents()
-        {
-            Rents = new ObservableCollection<RentViewModel>(RentMap.ToViewModel(RentsRepository.GetAll()));
-        }
-        private void AddNewRentExecute(object arg)
-        {
-           if (CurrentRent.DayRentCount <= 0)
-            {
-                MessageBox.Show("Количество дней аренды должно быть >0");
-            }
-            else
-            {
-                CurrentRent.ID = RentsRepository.FindMaxIDRent() + 1;
-                RentsRepository.Add(RentMap.ToRent(CurrentRent));
-                ClearFields();
-                UpdateRents();
-            }
-        }
-        private void ReturnRentExecute(object arg)
-        {
-                if (SelectedRent != null)
-                {
-                    var selectRent = RentMap.ToRent(SelectedRent);
-                    RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, CurrentRent.EndRent);
-                    RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, CurrentRent.EndRent);
-                    SelectedRent.EndRent = CurrentRent.EndRent;
-                    ChekFine(SelectedRent);
-                }
-                ClearFields();
         }
         public RentViewModel SelectedRent
         {
@@ -87,15 +62,45 @@ namespace CarRentalDesktop.ViewModel
                 OnPropertyChanged();
             }
         }
+        public RelayCommand AddNewRentCommand { get; set; }
+        public RelayCommand RemoveRentCommand { get; set; }
+        public RelayCommand ReturnRentCommand { get; set; }
+        public RelayCommand ClearRentCommand { get; set; }
+        private void UpdateRents()
+        {
+            Rents = new ObservableCollection<RentViewModel>(RentMap.ToViewModel(RentsRepository.GetAll()));
+        }
+        private void AddNewRentExecute(object arg)
+        {
+           if (CurrentRent.DayRentCount <= 0)
+            {
+                MessageBox.Show("Количество дней аренды должно быть >0");
+            }
+            else
+            {
+                CurrentRent.ID = RentsRepository.FindMaxIDRent() + 1;
+                RentsRepository.Add(RentMap.ToRent(CurrentRent));
+                UpdateRents();
+                ClearFields();
+            }
+        }
+        private void ReturnRentExecute(object arg)
+        {
+            if (SelectedRent == null)
+            {
+                return;
+            }
+            var selectRent = RentMap.ToRent(SelectedRent);
+            RentsRepository.UpdateDateEnd(selectRent.ClientNumberLicense, selectRent.CarNumber, CurrentRent.EndRent);
+            RentsRepository.ChekIsFine(selectRent.ClientNumberLicense, selectRent.CarNumber, CurrentRent.EndRent);
+            SelectedRent.EndRent = CurrentRent.EndRent;
+            ChekFine(SelectedRent);
+            ClearFields();
+        }
 
         private void ClearFields()
         {
-            CurrentRent.ClientNumberLicense = string.Empty;
-            CurrentRent.CarNumber = string.Empty;
-            CurrentRent.StartRent = DateTime.MinValue;
-            CurrentRent.EndRent = DateTime.MinValue;
-            CurrentRent.Fine = 0;
-            CurrentRent.DayRentCount = 0;
+            CurrentRent = new RentViewModel();
 
         }
         private void RemoveRentExecute(object arg)
@@ -111,10 +116,10 @@ namespace CarRentalDesktop.ViewModel
 
         private void ClearRentExecute(object arg)
          {
-             if (SelectedRent == null)
-             {
-                return;
-             }
+            if (SelectedRent == null)
+            {
+              return;
+            }
             ClearFields();
             SelectedRent = null;
         }

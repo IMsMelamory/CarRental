@@ -18,6 +18,7 @@ namespace CarRentalDesktop.ViewModel
                 EndRent = x.EndRent.Date,
                 DayRentCount = x.DayRentCount,
                 Fine = x.Fine,
+                ID = x.ID,
             }).ToList();
         }
         public Rent ToRent(RentViewModel vmRent)
@@ -30,6 +31,7 @@ namespace CarRentalDesktop.ViewModel
                 EndRent = vmRent.EndRent.Date,
                 DayRentCount = vmRent.DayRentCount,
                 Fine = vmRent.Fine,
+                ID = vmRent.ID,
             };
         }
     }   

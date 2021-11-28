@@ -54,6 +54,51 @@
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True"
+                                        Binding="{Binding Path = PhoneNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Номер телефона">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding PhoneNumber}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True"
+                                        Binding="{Binding Path = Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Электронная почта">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding Email}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True"
+                                        Binding="{Binding Path = Address, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Header="Адрес">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}"  BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding Address}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = StartWork, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}"
+                                            Header="Дата рождения">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding StartWork}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn IsReadOnly="True"
+                                            Binding="{Binding Path = EndWork, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}"
+                                            Header="Дата рождения">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                <Setter Property="ToolTip" Value="{Binding EndWork}" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <GridSplitter Grid.Column="0" Width="3" />
@@ -81,8 +126,24 @@
                         <TextBox MaxLength="20"
                                      Text="{Binding CurrentManager.SecondLastName, UpdateSourceTrigger=PropertyChanged, Mode = TwoWay}" />
                         <TextBlock Text="Дата рождения" />
+                        <DatePicker Text="{Binding CurrentManager.BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat = dd-MM-yyyy}" />
+                        <TextBlock Text="Номер телефона" />
+                        <TextBox MaxLength="20"
+                                     Text="{Binding CurrentManager.PhoneNumber, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                        <TextBlock Text="Электронная почта" />
+                        <TextBox MaxLength="20"
+                                     Text="{Binding CurrentManager.Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                        <TextBlock Text="Адрес" />
+                        <TextBox MaxLength="20"
+                                     Text="{Binding CurrentManager.Address, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                        <TextBlock Text="Дата приема на работу" />
                         <DatePicker
-                                Text="{Binding CurrentManager.BDay, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat = dd-MM-yyyy}" />
+                                Text="{Binding CurrentManager.StartWork,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}"
+                                />
+                        <TextBlock Text="Дата увольнения" />
+                        <DatePicker
+                                Text="{Binding CurrentManager.EndWork,  UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, StringFormat=dd-MM-yyyy}"
+                               />
                     </StackPanel>
                 </Grid>
                 <Button Grid.Row="0"
