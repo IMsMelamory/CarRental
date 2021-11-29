@@ -21,11 +21,6 @@ namespace CarRentalDesktop.ViewModel
         }
         public Car ToCar(CarViewModel vmCar)
         {
-            if (string.IsNullOrEmpty(vmCar.Color))
-            {
-                throw new Exception("Длинная длинна слишком коротка");
-            }
-            
             return new Car()
             {
                 Number = vmCar.Number,

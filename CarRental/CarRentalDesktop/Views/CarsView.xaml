@@ -87,23 +87,19 @@
                                 Margin="5">
                         <TextBlock Text="Номер" />
                         <TextBox MaxLength="20"
-                                 Text="{Binding CurrentCar.Number, UpdateSourceTrigger=PropertyChanged}" />
+                                 Text="{Binding CurrentCar.Number, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=true, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
                         <TextBlock Text="Модель" />
                         <TextBox MaxLength="20"
-                                 Text="{Binding CurrentCar.Model,  UpdateSourceTrigger=PropertyChanged}" />
+                                 Text="{Binding CurrentCar.Model,  UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=true, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
                         <TextBlock Text="Цвет" />
                         <TextBox MaxLength="20"
                                  Text="{Binding CurrentCar.Color,  UpdateSourceTrigger=PropertyChanged}" />
                         <TextBlock Text="Год выпуска" />
                         <TextBox MaxLength="20"
-                                 Text="{Binding CurrentCar.DateRelease,  UpdateSourceTrigger=PropertyChanged}" />
+                                 Text="{Binding CurrentCar.DateRelease,  UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=true, ValidatesOnExceptions=True, NotifyOnValidationError=True}" />
                         <TextBlock Text="Цена аренды за день" />
                         <TextBox MaxLength="20"
-                                 Text="{Binding CurrentCar.DayPrice,  UpdateSourceTrigger=PropertyChanged}">
-                            <i:Interaction.Behaviors>
-                                <behaviors:NumberTextBoxBehavior />
-                                <behaviors:LengthTextBoxBehavior MaxLength="3" />
-                            </i:Interaction.Behaviors>
+                                 Text="{Binding CurrentCar.DayPrice,  UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=true, ValidatesOnExceptions=True, NotifyOnValidationError=True}">
                         </TextBox>
                     </StackPanel>
                 </Grid>
